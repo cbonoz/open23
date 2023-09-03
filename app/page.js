@@ -2,19 +2,29 @@
 
 import Image from 'next/image'
 import styles from './page.module.css'
-import { useContext } from 'react'
+import { useContext, useState } from 'react'
 import WalletContext, { useWallet } from './context/wallet'
+import Search from 'antd/es/input/Search'
+import { getListings } from './util/tableland'
 
 export default function Home() {
 
-  const {wallet, setWallet} = useWallet()
+  const [listings, setListings] = useState([])
 
-  console.log('wallet', wallet, setWallet);
+  // const listings = await getListings();
+  // console.log('wallet', wallet, setWallet);
 
   return (
-   <div>
+    <div>
+      <h1>Main page</h1>
 
-    <h1>Main page</h1>
-   </div>
+      <div className={styles.grid}>
+        <Search placeholder="input search text" onSearch={value => console.log(value)} enterButton />
+        {listings.map((listing, i) => {
+          return <ListingCard listing={listing} key={i} />
+        })}
+      </div>
+
+    </div>
   )
 }

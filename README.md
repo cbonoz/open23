@@ -20,6 +20,14 @@ The inspiration for DataX came from the need for a reliable and efficient market
 DataX provides a user-friendly interface for listing various types of data sets. Data owners can upload their data, set a minimum asking price, and choose whether to list their data as an auction or for direct purchase. On the other side, data consumers can search for specific data sets, place bids in auctions, or directly purchase data at the listed prices.
 
 
+### Core functions
+* Create listing
+* Quick listing filter
+* Buy listing
+* Make offer
+* See offers
+
+
 ## How we built it
 
 NextJS: We utilized NextJS to create a responsive and interactive frontend interface that offers a seamless browsing experience for users.
@@ -29,6 +37,8 @@ Filecoin FVM: The Filecoin File Verification Marketplace (FVM) integration ensur
 Tableland: Tableland is employed to manage the complex data relationships within the marketplace, enabling efficient search and discovery of relevant data sets.
 
 web3.storage: To address the challenge of decentralized storage, we integrated web3.storage, which utilizes blockchain technology to securely store and retrieve data files.
+
+dataverse: Authentication and user state management.
 
 
 
@@ -41,6 +51,10 @@ web3.storage: To address the challenge of decentralized storage, we integrated w
 3. `yarn; yarn dev`
 
 The app should now be running on port 3000.
+
+### Deployment build
+
+1. `yarn out`
 
 <!-- ## Challenges we ran into
 

@@ -1,26 +1,27 @@
-import { Database } from "@tableland/sdk";
+// import { Database } from "@tableland/sdk";
 import { APP_NAME } from "./constant";
 
 // Create a database connection; since there is no signer,
 // table reads are possible but creates/writes are not
-const db = new Database();
 
 
 // This is the table's `prefix`--a custom table value prefixed as part of the table's name
 
-export const setupTables = async () => {
-    // Setup bid/ask tables and dataset links.
-    const prefix = APP_NAME.toLowerCase();
+// export const setupTables = async (signer) => {
+//     const db = new Database({signer});
+//     // Setup bid/ask tables and dataset links.
+//     const prefix = APP_NAME.toLowerCase();
 
-    const { meta: create } = await db
-    .prepare(`CREATE TABLE ${prefix} (id integer primary key, val text);`)
-    .run();
+//     const { meta: create } = await db
+//     .prepare(`CREATE TABLE ${prefix} (id integer primary key, val text);`)
+//     .run();
 
-    // The table's `name` is in the format `{prefix}_{chainId}_{tableId}`
-    const { name } = create.txn; // e.g., my_sdk_table_80001_311\
-}
+//     // The table's `name` is in the format `{prefix}_{chainId}_{tableId}`
+//     const { name } = create.txn; // e.g., my_sdk_table_80001_311\
+// }
 
 export const getListings = async (offset, limit) => {
+    return []
 
 }
 

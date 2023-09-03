@@ -1,7 +1,7 @@
 
 'use client';
 
-import { createContext, useContext, useState } from 'react';
+import { createContext, useContext, useEffect, useState } from 'react';
 import {
     DataverseConnector,
     WALLET
@@ -12,14 +12,12 @@ import {
  */
 
 
-
 const WalletContext = createContext({})
 
 export const WalletProvider = ({ children }) => {
     const [wallet, setWallet] = useState(null)
 
     const connect = async (provider) => {
-        console.log('connect', provider)
         const dataverseConnector = new DataverseConnector();
         const pkh = await dataverseConnector.connectWallet({
             provider
@@ -29,12 +27,13 @@ export const WalletProvider = ({ children }) => {
     }
 
     const logout = async () => {
+        const dataverseConnector = new DataverseConnector();
         await dataverseConnector.disconnectWallet();
         setWallet(null)
     }
 
     return (
-        <WalletContext.Provider value={{ wallet, connect, logout }}>
+        <WalletContext.Provider value={{ wallet, connect, logout, test: 5 }}>
             {children}
         </WalletContext.Provider>
     );

@@ -11,6 +11,7 @@
     "deploy": "yarn export && surge out/ data-x.surge.sh"
   },
   "dependencies": {
+    "@ant-design/cssinjs": "^1.17.0",
     "@dataverse/dataverse-connector": "^1.0.25",
     "@dataverse/runtime-connector": "^1.0.60",
     "@tableland/sdk": "^4.5.0",

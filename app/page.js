@@ -3,9 +3,8 @@
 import Image from 'next/image'
 import styles from './page.module.css'
 import { useContext, useState } from 'react'
-import WalletContext, { useWallet } from './context/wallet'
 import Search from 'antd/es/input/Search'
-import { getListings } from './util/tableland'
+import Head from 'next/head'
 
 export default function Home() {
 
@@ -17,7 +16,9 @@ export default function Home() {
   return (
     <div>
       <h1>Main page</h1>
-
+      <Head>
+        <meta property="og:title" content="My new title" key="title" />
+      </Head>
       <div className={styles.grid}>
         <Search placeholder="input search text" onSearch={value => console.log(value)} enterButton />
         {listings.map((listing, i) => {

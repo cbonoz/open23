@@ -8,19 +8,19 @@ import Image from 'next/image'
 import StyledComponentsRegistry from './lib/AntdRegistry';
 import Head from 'next/head';
 import Link from 'next/link';
-
-import './globals.css'
+import './globals.css';
 
 const { Header, Content } = Layout;
 const inter = Inter({ subsets: ['latin'] })
 
 
-export default function RootLayout({ children }) {
+
+
+function UiLayout({ children }) {
 
   const pathname = usePathname()
-  const wallet = useWallet()
-  console.log('wallet', wallet)
-
+  const {connect} = useWallet()
+  console.log('wallet', connect)
 
   const menuItems = [
 
@@ -50,18 +50,24 @@ export default function RootLayout({ children }) {
   ]
 
   return (
-      <StyledComponentsRegistry>
-        <Head>
-          <title>
-            DataX
-          </title>
-          <meta
-            name="description"
-            content="DataX is a bid/ask marketplace for data."
-            key="desc"
-          />
-        </Head>
-        <WalletProvider>
+    <html lang="en">
+      <body className={inter.className} suppressHydrationWarning={true}>
+        <StyledComponentsRegistry>
+
+          <Head>
+
+            <title>
+              DataX
+            </title>
+            <meta
+              name="description"
+              content="DataX is a bid/ask marketplace for data."
+              key="desc"
+            />
+            <meta charSet="utf-8" />
+            <meta name="viewport" content="initial-scale=1.0, width=device-width" />
+            <link rel="icon" type="image/x-icon" href="favicon.ico" />
+          </Head>
           <Layout>
             <Header style={{ background: '#fff', padding: 10 }}>
               <Menu mode="horizontal" defaultSelectedKeys={pathname} items={menuItems} />
@@ -73,7 +79,21 @@ export default function RootLayout({ children }) {
               {children}
             </Content>
           </Layout>
-        </WalletProvider>
-      </StyledComponentsRegistry>
+
+        </StyledComponentsRegistry>
+      </body>
+    </html>
   )
+}
+
+export default function RootLayout({ children }) {
+
+  return (
+    <WalletProvider>
+      <UiLayout>
+        {children}
+      </UiLayout>
+    </WalletProvider>
+  )
+
 }

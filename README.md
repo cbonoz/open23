@@ -1,22 +1,65 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+<br/>
+<p align='center'>
+    <img src='./public/logo.png' width=600 />
+</p>
+<br/>
 
-## Getting Started
+DataX
+---
 
-First, run the development server:
+DataX is a bid/ask marketplace for data similar to StockX where folks can list data for sale and then people can set their asking price. Built using NextJS, Filecoin FVM, Tableland, web3.storage
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-```
+## Inspiration
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+The inspiration for DataX came from the need for a reliable and efficient marketplace where data can be traded just like other commodities. We wanted to create a platform that empowers data owners to monetize their data assets while allowing data consumers to access valuable information in a transparent and decentralized manner.
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+
+## What it does
+
+DataX provides a user-friendly interface for listing various types of data sets. Data owners can upload their data, set a minimum asking price, and choose whether to list their data as an auction or for direct purchase. On the other side, data consumers can search for specific data sets, place bids in auctions, or directly purchase data at the listed prices.
+
+
+## How we built it
+
+NextJS: We utilized NextJS to create a responsive and interactive frontend interface that offers a seamless browsing experience for users.
+
+Filecoin FVM: The Filecoin File Verification Marketplace (FVM) integration ensures the security and immutability of listed data. This technology guarantees that data remains tamper-proof and accessible only to authorized users.
+
+Tableland: Tableland is employed to manage the complex data relationships within the marketplace, enabling efficient search and discovery of relevant data sets.
+
+web3.storage: To address the challenge of decentralized storage, we integrated web3.storage, which utilizes blockchain technology to securely store and retrieve data files.
+
+
+
+## Running the project
+
+1. Copy `.env.sample` -> `.env`
+
+2. Define the needed env variables.
+
+3. `yarn; yarn dev`
+
+The app should now be running on port 3000.
+
+<!-- ## Challenges we ran into
+
+## Accomplishments that we're proud of
+
+## What we learned -->
+
+## Potential future work
+* Implement advanced data analytics tools to provide insights and trends on data usage, helping both sellers and buyers make informed decisions.
+* Introduce real-time bidding functionality, allowing buyers to dynamically bid on data listings and enabling sellers to maximize their earnings.
+* Enhance data verification processes by exploring additional blockchain technologies to ensure the integrity and authenticity of listed data.
+* Collaborate with industry partners to onboard a wider range of data providers, enriching the variety and value of data available on the platform.
+* Develop mobile applications for DataX to extend its accessibility, enabling users to engage in data transactions on-the-go.
+
+
+### Useful links
+* https://www.encode.club/open-data-hack
+* https://ownershiplabs.notion.site/DataverseOS-Builders-Hackathon-2-0-377b2b3337454311ace6eb82a6ef5472
+* https://docs.tableland.xyz/sdk/database/
 
 ## Learn More
 

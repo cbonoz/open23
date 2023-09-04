@@ -19,7 +19,7 @@ const inter = Inter({ subsets: ['latin'] })
 function UiLayout({ children }) {
 
   const pathname = usePathname()
-  const {connect} = useWallet()
+  const {connect, wallet, logout} = useWallet()
   console.log('wallet', connect)
 
   const menuItems = [
@@ -44,7 +44,12 @@ function UiLayout({ children }) {
     {
       key: '/connect',
       style: { float: 'right' },
-      label: <Link href="#" onClick={() => connect(window?.ethereum)}>Connect</Link>,
+      label: <>
+{!wallet?.address && <Link href="#" onClick={connect}>Connect</Link>}
+{wallet?.address && <Link href="#" onClick={logout}>{wallet.address.substr(0, 6)} Logout</Link>}
+
+
+      </>,
       href: '/connect',
     }
   ]

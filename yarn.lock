@@ -1322,9 +1322,10 @@
   dependencies:
     "@openzeppelin/contracts" "4.8.3"
 
-"@tableland/sdk@tablelandnetwork/js-tableland":
-  version "0.0.0"
-  resolved "https://codeload.github.com/tablelandnetwork/js-tableland/tar.gz/eb10ec9d401592050c55c9761339fb956c4e9b71"
+"@tableland/sdk@^4.5.1":
+  version "4.5.1"
+  resolved "https://registry.yarnpkg.com/@tableland/sdk/-/sdk-4.5.1.tgz#19ca47e18159de68d43af95b90dfc4077e2432f0"
+  integrity sha512-ffvZYA9v6eNFsPYWtYJFfPT48rgtPIY4VTdcJbV2so7r4XGPw7JY4qdkWNO+2J8l4vOR9dusiSOHKVhHsNWeOA==
   dependencies:
     "@async-generators/from-emitter" "^0.3.0"
     "@tableland/evm" "^4.3.0"

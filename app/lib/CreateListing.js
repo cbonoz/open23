@@ -1,5 +1,8 @@
+'use client'
+
 import { Button } from 'antd'
 import React, { useState } from 'react'
+import { setupTables } from '../util/tableland'
 
 export default function CreateListing() {
 
@@ -36,6 +39,8 @@ export default function CreateListing() {
     return (
         <div>
             <h1>Create page</h1>
+
+            <Button onClick={() => setupTables()}>Setup Tables</Button>
 
             <Button type="primary" disabled={loading || incompleteData} loading={loading} onClick={submitData}>
                 Submit

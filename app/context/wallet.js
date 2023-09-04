@@ -14,26 +14,29 @@ import {
 
 const WalletContext = createContext({})
 
+
+
 export const WalletProvider = ({ children }) => {
     const [wallet, setWallet] = useState(null)
+    const [dataverseConnector, setDataverseConnector] = useState(null)
 
     const connect = async (provider) => {
-        const dataverseConnector = new DataverseConnector();
-        const pkh = await dataverseConnector.connectWallet({
-            provider
+        const d = new DataverseConnector();
+        const pkh = await d.connectWallet({
+            wallet: WALLET.METAMASK,
         });
 
         setWallet(pkh)
+        setDataverseConnector(d)
     }
 
     const logout = async () => {
-        const dataverseConnector = new DataverseConnector();
-        await dataverseConnector.disconnectWallet();
+        // await dataverseConnector.disconnectWallet();
         setWallet(null)
     }
 
     return (
-        <WalletContext.Provider value={{ wallet, connect, logout, test: 5 }}>
+        <WalletContext.Provider value={{ wallet, connect, logout, dataverseConnector, test: 5 }}>
             {children}
         </WalletContext.Provider>
     );

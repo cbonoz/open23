@@ -1,10 +1,11 @@
 
-
+import React from 'react'
+import CreateListing from '../lib/CreateListing'
 
 export default function Create() {
     return (
      <div>
-        <h1>Create page</h1>
+        <CreateListing />
      </div>
     )
 }

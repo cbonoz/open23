@@ -38,7 +38,7 @@ Tableland: Tableland is employed to manage the complex data relationships within
 
 web3.storage: To address the challenge of decentralized storage, we integrated web3.storage, which utilizes blockchain technology to securely store and retrieve data files.
 
-dataverse: Authentication and user state management.
+DataverseOS: Authentication and user state management.
 
 
 

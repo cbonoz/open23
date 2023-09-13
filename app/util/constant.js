@@ -24,3 +24,15 @@ export const SAMPLE_LISTINGS = [
         currency: 'ETH',
     }
 ]
+
+export const EXAMPLE_FORM = {...SAMPLE_LISTINGS[0]}
+
+export const IPFS_BASE_URL = 'https://ipfs.filebase.io/ipfs'
+
+export const ACTIVE_CHAIN = {
+    id: 314159,
+    name: 'Filecoin Calibration',
+    symbol: 'tFIL',
+    rpc: 'https://calibration.node.glif.io/',
+    explorerUrl: 'https://calibration.filscan.io/',
+}

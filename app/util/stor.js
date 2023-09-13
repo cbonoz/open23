@@ -12,7 +12,7 @@ function makeStorageClient() {
   return new Web3Storage({ token: getAccessToken() });
 }
 
-export async function storeFiles(files, metadata) {
+export async function uploadFiles(files, metadata) {
   const newFiles = [...files]
   if (metadata) {
     const blob = new Blob([JSON.stringify(metadata)], { type: 'application/json' })

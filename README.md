@@ -30,7 +30,7 @@ DataX provides a user-friendly interface for listing various types of data sets.
 
 ## How we built it
 
-NextJS: We utilized NextJS to create a responsive and interactive frontend interface that offers a seamless browsing experience for users.
+NextJS: We utilized NextJS to create a responsive and interactive frontend interface that offers a seamless browsing experience for users. Deployed on surge.
 
 Filecoin FVM: The Filecoin File Verification Marketplace (FVM) integration ensures the security and immutability of listed data. This technology guarantees that data remains tamper-proof and accessible only to authorized users.
 
@@ -39,6 +39,8 @@ Tableland: Tableland is employed to manage the complex data relationships within
 web3.storage: To address the challenge of decentralized storage, we integrated web3.storage, which utilizes blockchain technology to securely store and retrieve data files.
 
 DataverseOS: Authentication and user state management.
+
+Saturn: Data validation (using browser client). https://github.com/filecoin-saturn/browser-client
 
 
 

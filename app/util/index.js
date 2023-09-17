@@ -38,7 +38,7 @@ export function capitalize(string) {
 }
 
 export const getExplorerUrl = (hash, useTx) =>
-  `${ACTIVE_CHAIN.url}${useTx ? "tx/" : "address/"}${hash}${ACTIVE_CHAIN.id === 31415 ? '?network=wallaby' : ''}`;
+  `${ACTIVE_CHAIN.explorerUrl}${useTx ? "tx/" : "address/"}${hash}${ACTIVE_CHAIN.id === 31415 ? '?network=wallaby' : ''}`;
 
 export const createJsonFile = (signload, fileName) => {
   const st = JSON.stringify(signload);

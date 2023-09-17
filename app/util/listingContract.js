@@ -1,24 +1,26 @@
 import { ethers } from "ethers";
+import { DATA_CONTRACT} from "./metadata";
 
-async function deployContract(contractAddress, signer, name, description, cid, price, keywords) {
+export async function deployContract(signer, cid, price) {
     // Deploy contract with ethers
     const factory = new ethers.ContractFactory(
-        contractAddress,
-        DATA_CONTRACT_ABI,
+        DATA_CONTRACT.abi,
+        DATA_CONTRACT.bytecode,
         signer
     );
-    const contract = await factory.deploy();
+    const contract = await factory.deploy(cid, price);
     // log
+    console.log("Deploying contract...", cid, price);
     await contract.deployed();
-    console.log("Deploying contract...", contract.address);
+    console.log("deployed contract...", contract.address);
     return contract;
 }
 
-async function purchaseContract(signer, contractAddress, price) {
+export async function purchaseContract(signer, contractAddress, price) {
     // Deploy contract with ethers
     const contract = new ethers.Contract(
         contractAddress,
-        DATA_CONTRACT_ABI,
+        DATA_CONTRACT.abi,
         signer
     );
     // log

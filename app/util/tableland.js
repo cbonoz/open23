@@ -6,11 +6,11 @@ import { APP_NAME } from "./constant";
 const LISTING_TABLE = process.env.NEXT_PUBLIC_LISTING_TABLE;
 const OFFER_TABLE = process.env.NEXT_PUBLIC_OFFER_TABLE;
 
+const db = new Database();
 
 // This is the table's `prefix`--a custom table value prefixed as part of the table's name
 
 export const setupTables = async () => {
-    const db = new Database();
     // Setup bid/ask tables and dataset links.
     const prefix = APP_NAME.toLowerCase();
     const listingTableName = `${prefix}_listings`
@@ -39,8 +39,9 @@ export const getListings = async (offset, limit) => {
 
 export const createListing = async (listing) => {
     const { meta: insert } = db.prepare(`insert into ${LISTING_TABLE} (name, created_by, created_at, image, description, purchases, price, address) values (?, ?, ?, ?, ?, ?, ?, ?);`)
-        .bind(listing.name, listing.createdBy, listing.createdAt, listing.image, listing.description, listing.purchases, listing.price, listing,address)
+        .bind(listing.name, listing.createdBy, listing.createdAt, listing.image, listing.description, listing.purchases, listing.price, listing.address)
         .run();
+    console.log('insert', insert, insert.txn, insert.wait)
     return await insert.txn.wait();
 }
 

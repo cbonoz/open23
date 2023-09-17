@@ -27,6 +27,9 @@ export default function About() {
         <p>
             {APP_NAME} is an open source project. You can find the code on GitHub here.
         </p>
+        <p>
+            The create tables button will create the tables needed for the app to run. For the hosted deployment, these tables are already created and set in the environment. This is only needed once.
+        </p>
         <a href="https://github.com/open23" target="_blank">GitHub</a>
 
         <br/>
@@ -47,7 +50,7 @@ export default function About() {
             } finally {
                 setLoading(false)
             }
-        }}>Create tables</Button>
+        }}>Create tables (admin)</Button>
 
         {result && <div>
             <br/>

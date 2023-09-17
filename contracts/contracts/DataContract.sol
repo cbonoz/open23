@@ -5,39 +5,44 @@ pragma solidity ^0.8.0;
 contract DataContract {
 
   address public deployer;
-  uint256 public fee;
-  string private url; // TODO: move to private FEVM.
+  uint256 public price;
+  string private cid; // TODO: move to private FEVM.
   bool public active;
   mapping(address => bool) public hasAccess;
 
-  constructor(string memory _url, uint256 _fee) {
+  constructor(string memory _cid, uint256 _price) {
     deployer = msg.sender;
-    url = _url;
-    fee = _fee;
+    cid = _cid;
+    price = _price;
     active = true;
   }
 
   function purchaseAccess() public payable {
     require(active, "Contract was marked inactive by creator");
-    require(msg.value == fee, "Incorrect fee amount");
+    if (price == 0) {
+      hasAccess[msg.sender] = true;
+      return;
+    }
+
+    require(msg.value == price, "Incorrect price, please call contract with nonzero value");
     // Transfer to deployer.
     payable(deployer).transfer(msg.value);
     hasAccess[msg.sender] = true;
   }
 
-  // get fee
-    function getFee() public view returns (uint256) {
-        return fee;
+  // get price
+    function getPrice() public view returns (uint256) {
+        return price;
     }
 
-  function getUrl(address _address) public view returns (string memory) {
-    require(hasAccess[_address], "Call purchaseAccess to get url");
-    return url;
+  function getCid(address _address) public view returns (string memory) {
+    require(hasAccess[_address], "Call purchaseAccess to get cid");
+    return cid;
   }
 
-  function changeFee(uint256 _newFee) public {
+  function changePrice(uint256 _newPrice) public {
     require(msg.sender == deployer);
-    fee = _newFee;
+    price = _newPrice;
   }
 
   function toggleActive() public {

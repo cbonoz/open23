@@ -39,6 +39,17 @@ export function FileDrop({ files, setFiles }) {
   const { getRootProps, getInputProps } = useDropzone({
     onDrop: (acceptedFiles) => {
       console.log("files", acceptedFiles);
+      let isOk = true;
+      acceptedFiles.forEach((file) => {
+        if (file.size > 10000000) {
+          // Show alert saying file must be under max
+          alert(`File ${file.name} must be under 10MB for demo`)
+          isOk = false;
+        }
+      });
+      if (!isOk) {
+        return;
+      }
       setFiles(
         acceptedFiles.map((file) =>
           Object.assign(file, {

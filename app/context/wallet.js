@@ -19,8 +19,9 @@ const WalletContext = createContext({})
 export const WalletProvider = ({ children }) => {
     const [wallet, setWallet] = useState(null)
     const [dataverseConnector, setDataverseConnector] = useState(null)
+    const [provider, setProvider] = useState(null)
 
-    const connect = async (provider) => {
+    const connect = async () => {
         const d = new DataverseConnector();
         const pkh = await d.connectWallet({
             wallet: WALLET.METAMASK,
@@ -28,6 +29,7 @@ export const WalletProvider = ({ children }) => {
 
         setWallet(pkh)
         setDataverseConnector(d)
+        setProvider(await d.getProvider())
     }
 
     const logout = async () => {
@@ -36,7 +38,7 @@ export const WalletProvider = ({ children }) => {
     }
 
     return (
-        <WalletContext.Provider value={{ wallet, connect, logout, dataverseConnector, test: 5 }}>
+        <WalletContext.Provider value={{ wallet, connect, logout, provider, dataverseConnector, test: 5 }}>
             {children}
         </WalletContext.Provider>
     );

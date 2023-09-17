@@ -2,36 +2,57 @@
 
 import Image from 'next/image'
 import styles from './page.module.css'
-import { useContext, useState } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import Search from 'antd/es/input/Search'
 import Head from 'next/head'
 import ListingCard from './lib/ListingCard'
 import { EXAMPLE_ITEM } from './util/constant'
+import { Spin } from 'antd'
+import { getListings } from './util/tableland'
+import Script from 'next/script'
 
 export default function Home() {
-
+  const [loading, setLoading] = useState(false)
   const [listings, setListings] = useState([EXAMPLE_ITEM])
 
-  // const listings = await getListings();
-  // console.log('wallet', wallet, setWallet);
+  async function get() {
+    setLoading(true)
+    try {
+      const res = await getListings(0, 100)
+      console.log('get listings', res)
+      setListings(res)
+    } catch (e) {
+      console.error('error getting listings', e)
+      setListings([EXAMPLE_ITEM])
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  useEffect(() => {
+    get()
+  }, [])
+
 
   return (
     <div>
       <h1>Search listings</h1>
       <Head>
-        {/* <meta property="og:title" content="My new title" key="title" /> */}
-        {/* favicon */}
-        <title>My page title</title>
-        <link rel="icon" href="/favicon.ico" />
       </Head>
       <div className={styles.grid}>
         <Search placeholder="input search text" onSearch={value => console.log(value)} enterButton />
+        {loading && <div>
+          <Spin size='large' />
+        </div>}
         <br />
-        <div className="listing-section">
+        {!loading && <div className="listing-section">
           {listings.map((listing, i) => {
             return <ListingCard listing={listing} key={i} />
           })}
-        </div>
+        </div>}
+        {!loading && listings.length === 0 && <div>
+          No listings found
+        </div>}
       </div>
 
     </div>

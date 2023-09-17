@@ -1,21 +1,20 @@
 'use client'
 
 import React, { useEffect, useState } from "react";
-import { Button, Input, Row, Col, Steps, Result } from "antd";
+import { Button, Input, Row, Col, Steps, Result, Divider } from "antd";
 import { listingUrl, ipfsUrl, getExplorerUrl, humanError, } from "../util";
 import { uploadFiles } from "../util/stor";
 import TextArea from "antd/lib/input/TextArea";
-import { deployContract } from "../util/listingContract";
 import { EXAMPLE_ITEM, ACTIVE_CHAIN, APP_NAME } from "../util/constant";
 import { FileDrop } from "./FileDrop";
 import { useWallet } from "../context/wallet";
 import { createListing } from "../util/tableland";
+import { deployContract } from "../util/listingContract";
 
 const { Step } = Steps;
 
 function CreateListing() {
-  const { connect, wallet, logout } = useWallet()
-  const {address} = wallet || {}
+  const { connect, provider, wallet, logout } = useWallet()
 
 
   //   useEffect(() => {
@@ -38,7 +37,7 @@ function CreateListing() {
   };
 
   const getActiveError = (data) => {
-    if (!data.title || !data.description || !data.priceEVM) {
+    if (!data.name || !data.description || !data.price) {
       return "Please provide a name, description, price for the item.";
     }
 
@@ -59,7 +58,7 @@ function CreateListing() {
       return;
     }
 
-    if (!signer) {
+    if (!provider) {
       setError(`Please connect a valid ${ACTIVE_CHAIN.name} wallet`);
       return;
     }
@@ -82,23 +81,31 @@ function CreateListing() {
           files,
           res
         );
+      } else {
+        throw new Error("No files found");
       }
 
       // 2) deploy contract with initial metadata
-      const contract = await deployContract(signer, data.title, data.description, cid, data.priceEVM, data.keywords)
+      const contract = await deployContract(provider.signer, cid, res.price)
+      res["cid"] = cid;
       res["listingUrl"] = listingUrl(cid);
       res["contract"] = contract.address;
       res["contractUrl"] = getExplorerUrl(contract.address);
 
       // 3) create table entry
-      const listing = {...data} // TODO: set all fields.
+      const listing = { ...data } // TODO: set all fields.
       listing['address'] = contract.address;
-      const listingResult = await createListing(listing);
+      try {
+        const listingResult = await createListing(listing);
+      } catch (e) {
+        console.error('error creating db listing', e)
+        res['dbError'] = JSON.stringify(e.message || e.response?.message || e)
+      }
 
       // Result rendered after successful doc upload + contract creation.
       setResult(res);
     } catch (e) {
-      console.error("error creating datamarket request", e);
+      console.error("error creating datax request", e);
       const message = e.reason || e.response?.message || e.message
       setError(humanError(message))
     } finally {
@@ -120,13 +127,14 @@ function CreateListing() {
       <Row>
         <Col span={16}>
           <div className="create-form white boxed">
-            {!result && <><h2>Create new data listing</h2>
+            {!result && <><h2>Create new datax listing</h2>
+              <Divider />
               <a href="#" onClick={e => {
                 e.preventDefault()
                 setDemo()
               }}>Set demo values</a>
               <br />
-              <br/>
+              <br />
 
               <h3 className="vertical-margin">Data Listing information:</h3>
               <h5>Name</h5>
@@ -148,18 +156,29 @@ function CreateListing() {
               <br />
               <br />
 
+     
               <h5>Price ({ACTIVE_CHAIN.symbol})</h5>
               <Input
                 placeholder="Purchase price"
                 value={data.price}
-                onChange={(e) => updateData("priceEVM", e.target.value)}
+                onChange={(e) => updateData("price", e.target.value)}
               />
               <br />
               <br />
 
-              <h5>Keywords (enter separated by comma)</h5>
+              <h5>[Optional] Listing image (link)</h5>
               <Input
-                placeholder={data.tags}
+                placeholder="Provide a link to an image describing your listing"
+                value={data.image}
+                onChange={(e) => updateData("image", e.target.value)}
+              />
+              <br />
+              <br />
+
+
+              <h5>[Optional] Keywords (enter separated by comma)</h5>
+              <Input
+                placeholder={"Add keywords to help others understand and find your listing"}
                 value={data.tags}
                 onChange={(e) => updateData("keywords", e.target.value)}
               />
@@ -168,7 +187,7 @@ function CreateListing() {
               <h5>Address</h5>
               <Input
                 placeholder={'Your address'}
-                value={address || data.createdby}
+                value={wallet?.address || data.createdby}
                 disabled
                 onChange={(e) => updateData("createdBy", e.target.value)}
               />
@@ -199,9 +218,9 @@ function CreateListing() {
             {error && <div className="error-text">Error: {error}</div>}
             {result && (<div>
               <Result status="success"
-                title="Created datamarket request!" subTitle="Access your page and content below" />
+                title="Created datax request!" subTitle="Access your page and content below" />
               <div>
-                <a href={ipfsUrl(result.dataUrl)} target="_blank">
+                <a href={ipfsUrl(result.cid)} target="_blank">
                   View files
                 </a>
                 <br />

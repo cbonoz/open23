@@ -8,6 +8,7 @@ import Image from 'next/image'
 import StyledComponentsRegistry from './lib/AntdRegistry';
 import Head from 'next/head';
 import Link from 'next/link';
+import Script from 'next/script';
 import './globals.css';
 import { APP_NAME } from './util/constant';
 import { Footer } from 'antd/es/layout/layout';
@@ -20,7 +21,6 @@ function UiLayout({ children }) {
 
   const pathname = usePathname()
   const { connect, wallet, logout } = useWallet()
-  console.log('wallet', connect)
 
   const menuItems = [
     {
@@ -43,12 +43,11 @@ function UiLayout({ children }) {
   return (
     <html lang="en">
       <body className={inter.className} suppressHydrationWarning={true}>
+        <Script async src="https://saturn.tech/widget.js" />
         <StyledComponentsRegistry>
-
           <Head>
             <title>
-              hello
-              {/* {APP_NAME} */}
+              {APP_NAME}
             </title>
             <meta
               name="description"
@@ -67,9 +66,11 @@ function UiLayout({ children }) {
                 height={48}
                 width={160}
                 priority />
-              <Menu mode="horizontal" defaultSelectedKeys={pathname} items={menuItems} />
 
-              <span>
+              <Menu style={{ minWidth: '800px' }}
+                mode="horizontal" defaultSelectedKeys={pathname} items={menuItems} />
+
+              <span style={{float: 'right', right: 20, position: 'absolute'}}>
                 {!wallet?.address && <Button href="#" type="primary" onClick={connect}>Connect</Button>}
                 {wallet?.address && <span>{abbreviate(wallet?.address)}&nbsp;(<a href="#" onClick={logout}>logout</a>)</span>}
               </span>

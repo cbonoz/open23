@@ -3,6 +3,8 @@ import { APP_NAME } from "./constant";
 
 // Create a database connection; since there is no signer,
 // table reads are possible but creates/writes are not
+const LISTING_TABLE = process.env.NEXT_PUBLIC_LISTING_TABLE;
+const OFFER_TABLE = process.env.NEXT_PUBLIC_OFFER_TABLE;
 
 
 // This is the table's `prefix`--a custom table value prefixed as part of the table's name
@@ -11,37 +13,48 @@ export const setupTables = async () => {
     const db = new Database();
     // Setup bid/ask tables and dataset links.
     const prefix = APP_NAME.toLowerCase();
+    const listingTableName = `${prefix}_listings`
+    const offerTableName = `${prefix}_offers`
 
-    const { meta: create } = await db
-    .prepare(`CREATE TABLE ${prefix} (id integer primary key, val text);`)
-    .run();
+    const { meta: createListing } = await db
+        .prepare(`CREATE TABLE ${listingTableName} (id integer primary key, name text, created_by text, 
+            created_at integer, image text, description text, purchases integer, price integer, address text);`)
+        .run();
+
+    const { meta: createOffer } = await db
+        .prepare(`CREATE TABLE ${offerTableName} (id integer primary key, offer integer, created_by text, created_at integer, listing_id integer);`)
+        .run();
 
     // The table's `name` is in the format `{prefix}_{chainId}_{tableId}`
-    const { name } = create.txn; // e.g., my_sdk_table_80001_311\
-    console.log('setup', create)
+    const { name: listingTable } = createListing.txn; // e.g., my_sdk_table_80001_311\
+    const { name: offerTable } = createOffer.txn; // e.g., my_sdk_table_80001_311\
+    console.log('setup', listingTable, offerTable)
+    return { listingTable, offerTable };
 }
 
 export const getListings = async (offset, limit) => {
-    return []
-
-}
-
-export const searchListings = async () => {
-
+    const { results } = await db.prepare(`SELECT * FROM ${LISTING_TABLE} limit ${limit} offset ${offset};`).all();
+    return results;
 }
 
 export const createListing = async (listing) => {
-
+    const { meta: insert } = db.prepare(`insert into ${LISTING_TABLE} (name, created_by, created_at, image, description, purchases, price, address) values (?, ?, ?, ?, ?, ?, ?, ?);`)
+        .bind(listing.name, listing.createdBy, listing.createdAt, listing.image, listing.description, listing.purchases, listing.price, listing,address)
+        .run();
+    return await insert.txn.wait();
 }
 
 export const createOffer = async (offer) => {
+    const { meta: insert } = db.prepare(`insert into ${OFFER_TABLE} (offer, created_by, created_at, listing_id) values (?, ?, ?, ?);`)
+        .bind(offer.offer, offer.createdBy, offer.createdAt, offer.listingId)
+        .run();
+    return await insert.txn.wait();
 
 }
 
-export const getListingWithOffers = async (listingId) => {
-
-}
-
-export const acceptOffer = async (offerId) => {
-
+export const getOffersForListing = async (listingId) => {
+    const { results } = await db.prepare(`SELECT * FROM ${OFFER_TABLE} where listing_id=?;`)
+        .bind(listingId)
+        .all();
+    return results;
 }

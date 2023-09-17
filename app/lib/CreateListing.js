@@ -6,27 +6,32 @@ import { listingUrl, ipfsUrl, getExplorerUrl, humanError, } from "../util";
 import { uploadFiles } from "../util/stor";
 import TextArea from "antd/lib/input/TextArea";
 import { deployContract } from "../util/listingContract";
-import { EXAMPLE_FORM } from "../util/constant";
+import { EXAMPLE_ITEM, ACTIVE_CHAIN, APP_NAME } from "../util/constant";
 import { FileDrop } from "./FileDrop";
+import { useWallet } from "../context/wallet";
+import { createListing } from "../util/tableland";
 
 const { Step } = Steps;
 
 function CreateListing() {
+  const { connect, wallet, logout } = useWallet()
+  const {address} = wallet || {}
 
-//   useEffect(() => {
-//     const networkId = network?.chain?.id
-//     console.log('network', network)
-//     if (networkId) {
-//       refetch()
-//     }
-//   }, [network, account])
+
+  //   useEffect(() => {
+  //     const networkId = network?.chain?.id
+  //     console.log('network', network)
+  //     if (networkId) {
+  //       refetch()
+  //     }
+  //   }, [network, account])
 
   const [data, setData] = useState({});
   const [error, setError] = useState();
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState();
 
-  const setDemo = () => setData({...EXAMPLE_FORM})
+  const setDemo = () => setData({ ...EXAMPLE_ITEM })
 
   const updateData = (key, value) => {
     setData({ ...data, [key]: value });
@@ -70,7 +75,7 @@ function CreateListing() {
     let res = { ...data };
 
     try {
-      // 2) Create files/metadata to ipfs.
+      // 1) Create files/metadata to ipfs.
       let cid = '';
       if (files && files.length > 0) {
         cid = await uploadFiles(
@@ -79,14 +84,16 @@ function CreateListing() {
         );
       }
 
-      // 3) return shareable url.
+      // 2) deploy contract with initial metadata
       const contract = await deployContract(signer, data.title, data.description, cid, data.priceEVM, data.keywords)
-      // 1) deploy base contract with metadata,
-
-      res["listingUrl"] = datamarketUrl(contract.address);
-      res["dataUrl"] = cid
+      res["listingUrl"] = listingUrl(cid);
       res["contract"] = contract.address;
       res["contractUrl"] = getExplorerUrl(contract.address);
+
+      // 3) create table entry
+      const listing = {...data} // TODO: set all fields.
+      listing['address'] = contract.address;
+      const listingResult = await createListing(listing);
 
       // Result rendered after successful doc upload + contract creation.
       setResult(res);
@@ -114,77 +121,85 @@ function CreateListing() {
         <Col span={16}>
           <div className="create-form white boxed">
             {!result && <><h2>Create new data listing</h2>
-            <a href="#" onClick={e => {
-              e.preventDefault()
-              setDemo()
-            }}>Set demo values</a>
-            <br />
+              <a href="#" onClick={e => {
+                e.preventDefault()
+                setDemo()
+              }}>Set demo values</a>
+              <br />
+              <br/>
 
-            <h3 className="vertical-margin">Listing information:</h3>
-            <h5>Name</h5>
-            <Input
-              placeholder="Name of listing"
-              value={data.title}
-              onChange={(e) => updateData("title", e.target.value)}
-            />
-            <br/>
-            <br/>
+              <h3 className="vertical-margin">Data Listing information:</h3>
+              <h5>Name</h5>
+              <Input
+                placeholder="Name of listing"
+                value={data.name}
+                onChange={(e) => updateData("name", e.target.value)}
+              />
+              <br />
+              <br />
+              <h5>Description</h5>
+              <TextArea
+                aria-label="Description"
+                onChange={(e) => updateData("description", e.target.value)}
+                placeholder="Add any additional description on the dataset"
+                prefix="Description"
+                value={data.description}
+              />
+              <br />
+              <br />
 
-            <h5>Description</h5>
-            <TextArea
-              aria-label="Description"
-              onChange={(e) => updateData("description", e.target.value)}
-              placeholder="Add any additional description on the dataset"
-              prefix="Description"
-              value={data.description}
-            />
-            <br/>
-            <br/>
+              <h5>Price ({ACTIVE_CHAIN.symbol})</h5>
+              <Input
+                placeholder="Purchase price"
+                value={data.price}
+                onChange={(e) => updateData("priceEVM", e.target.value)}
+              />
+              <br />
+              <br />
 
-            <h5>Price ({ACTIVE_CHAIN.symbol})</h5>
-            <Input
-              placeholder="Purchase price"
-              value={data.priceEVM}
-              onChange={(e) => updateData("priceEVM", e.target.value)}
-            />
-            <br/>
-            <br/>
+              <h5>Keywords (enter separated by comma)</h5>
+              <Input
+                placeholder={data.tags}
+                value={data.tags}
+                onChange={(e) => updateData("keywords", e.target.value)}
+              />
+              <br />
+              <br />
+              <h5>Address</h5>
+              <Input
+                placeholder={'Your address'}
+                value={address || data.createdby}
+                disabled
+                onChange={(e) => updateData("createdBy", e.target.value)}
+              />
 
-            <h5>Keywords</h5>
-            <Input
-              placeholder={EXAMPLE_FORM.keywords}
-              value={data.keywords}
-              onChange={(e) => updateData("keywords", e.target.value)}
-            />
+              {/* TODO: add configurable amount of items */}
+              <h3 className="vertical-margin">Upload dataset(s) for purchaseable collection</h3>
+              <FileDrop
+                files={data.files || []}
+                setFiles={(files) => updateData("files", files)}
+              />
 
-
-            {/* TODO: add configurable amount of items */}
-            <h3 className="vertical-margin">Create dataset(s) for purchaseable collection</h3>
-            <FileDrop
-              files={data.files || []}
-              setFiles={(files) => updateData("files", files)}
-            />
-
-            <Button
-              type="primary"
-              className="standard-button"
-              onClick={create}
-              disabled={loading || errMessage}
-              loading={loading}
-              size="large"
-            >
-              Create datamarket request!
-            </Button>
-            {!error && !result && loading && (
-              <span>&nbsp;Note this may take a few moments.</span>
-            )}
-            <br />
-            <br />
+              <Button
+                type="primary"
+                className="standard-button"
+                onClick={create}
+                disabled={loading || errMessage}
+                loading={loading}
+                size="large"
+              >
+                Create Listing
+              </Button>
+              {!error && !result && loading && (
+                <span>&nbsp;Note this may take a few moments.</span>
+              )}
+              <br />
+              <br />
             </>}
             {error && <div className="error-text">Error: {error}</div>}
             {result && (<div>
               <Result status="success"
- title="Created datamarket request!" subTitle="Access your page and content below"/>
+                title="Created datamarket request!" subTitle="Access your page and content below" />
               <div>
                 <a href={ipfsUrl(result.dataUrl)} target="_blank">
                   View files
@@ -198,12 +213,12 @@ function CreateListing() {
                 <p>
                   Share or post this page with potential customers
                   <br />
-                  <a href={result.datamarketUrl} target="_blank">
+                  <a href={result.listingUrl} target="_blank">
                     View listing page
                   </a>
                 </p>
               </div>
-              </div>
+            </div>
             )}
           </div>
         </Col>

@@ -1,0 +1,1 @@
+export const DATA_CONTRACT_ABI = [];

@@ -1,11 +1,14 @@
+import ListingDetail from "../../lib/ListingDetail"
+import { EXAMPLE_ITEM } from "../../util/constant"
 
 
-export default function ListingDetail({ params }) {
+export default function ListingPage({ params }) {
     const { listingId } = params
+
     return (
         <div>
-            <h1>Listing detail page</h1>
-            <p>{listingId}</p>
+            <ListingDetail item={EXAMPLE_ITEM} />
+
         </div>
     )
 }

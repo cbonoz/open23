@@ -1,7 +1,7 @@
 'use client'; // Remove for SSR.
 
 import { WalletProvider, useWallet } from './context/wallet'
-import { Layout, Menu } from 'antd';
+import { Button, Layout, Menu } from 'antd';
 import { usePathname } from 'next/navigation'
 import { Inter } from 'next/font/google'
 import Image from 'next/image'
@@ -9,26 +9,23 @@ import StyledComponentsRegistry from './lib/AntdRegistry';
 import Head from 'next/head';
 import Link from 'next/link';
 import './globals.css';
+import { APP_NAME } from './util/constant';
+import { Footer } from 'antd/es/layout/layout';
+import { abbreviate } from './util';
 
 const { Header, Content } = Layout;
 const inter = Inter({ subsets: ['latin'] })
 
-
-
-
 function UiLayout({ children }) {
 
   const pathname = usePathname()
-  const {connect, wallet, logout} = useWallet()
+  const { connect, wallet, logout } = useWallet()
   console.log('wallet', connect)
 
   const menuItems = [
-
     {
       key: '/',
-      label: <Link href="/">
-        <Image src="logo.png" alt="DataX Logo" width={180} height={37} priority />
-      </Link>,
+      label: <Link href="/">Search listings</Link>,
       href: '/',
     },
     {
@@ -41,17 +38,6 @@ function UiLayout({ children }) {
       label: <Link href="/about">About</Link>,
       href: '/about',
     },
-    {
-      key: '/connect',
-      style: { float: 'right' },
-      label: <>
-{!wallet?.address && <Link href="#" onClick={connect}>Connect</Link>}
-{wallet?.address && <Link href="#" onClick={logout}>{wallet.address.substr(0, 6)} Logout</Link>}
-
-
-      </>,
-      href: '/connect',
-    }
   ]
 
   return (
@@ -60,9 +46,9 @@ function UiLayout({ children }) {
         <StyledComponentsRegistry>
 
           <Head>
-
             <title>
-              DataX
+              hello
+              {/* {APP_NAME} */}
             </title>
             <meta
               name="description"
@@ -71,18 +57,39 @@ function UiLayout({ children }) {
             />
             <meta charSet="utf-8" />
             <meta name="viewport" content="initial-scale=1.0, width=device-width" />
-            <link rel="icon" type="image/x-icon" href="favicon.ico" />
+            <link rel="icon" href="favicon.ico" sizes="any" />
+
           </Head>
           <Layout>
-            <Header style={{ background: '#fff', padding: 10 }}>
+            <Header style={{ background: '#fff', display: 'flex' }}>
+              <Image src="/logo.png" alt="DataX Logo"
+                className='header-logo'
+                height={48}
+                width={160}
+                priority />
               <Menu mode="horizontal" defaultSelectedKeys={pathname} items={menuItems} />
+
+              <span>
+                {!wallet?.address && <Button href="#" type="primary" onClick={connect}>Connect</Button>}
+                {wallet?.address && <span>{abbreviate(wallet?.address)}&nbsp;(<a href="#" onClick={logout}>logout</a>)</span>}
+              </span>
 
 
             </Header>
-            <Content style={{ padding: '0 50px', marginTop: 64 }}>
+            <Content className='container'>
               {/* Pass children to the content area */}
-              {children}
+              <div className='container'>
+                {children}
+              </div>
             </Content>
+
+            <Footer style={{ textAlign: 'center' }}>
+              <hr />
+              <br />
+              {APP_NAME} ©2023. Created for the&nbsp;
+              <a href="https://www.encode.club/open-data-hack" target='_blank'>Encode Open Data Hack</a>.
+
+            </Footer>
           </Layout>
 
         </StyledComponentsRegistry>

@@ -7,7 +7,7 @@
 DataX
 ---
 
-DataX is a bid/ask marketplace for data similar to StockX where folks can list data for sale and then people can set their asking price. Built using NextJS, Filecoin FVM, Tableland, web3.storage
+DataX is a bid/ask marketplace for data similar to StockX where folks can list data for sale and then people can set their asking price. Built using NextJS, Filecoin FVM, Tableland, Saturn, and web3.storage.
 
 ## Inspiration
 

@@ -13,6 +13,7 @@ import Script from 'next/script'
 
 export default function Home() {
   const [loading, setLoading] = useState(false)
+  const [searchValue, setSearchValue] = useState('')
   const [listings, setListings] = useState([generateItem(1), generateItem(2)])
 
   async function get() {
@@ -20,9 +21,7 @@ export default function Home() {
     try {
       const res = await getListings(0, 100)
       console.log('get listings', res)
-      if (res) {
-        setListings(res)
-      }
+      // setListings(res)
     } catch (e) {
       console.error('error getting listings', e)
     } finally {
@@ -39,10 +38,14 @@ export default function Home() {
     <div className='container'>
       <h1>Search listings</h1>
       <div className={styles.grid}>
-        <Search placeholder="input search text" onSearch={value => console.log(value)} enterButton />
+        <Search 
+        className='search-input'
+        placeholder="Search by listing name or description" 
+        onSearch={value => setSearchValue(value)} enterButton />
         {loading && <div>
           <Spin size='large' />
         </div>}
+        <br />
         <br />
         {!loading && <div className="listing-section">
           {listings.map((listing, i) => {

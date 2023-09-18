@@ -46,7 +46,7 @@ a {
 }
 
 .listing-card {
-  margin: 20px;
+  margin: 5px;
 }
 
 /* Old styles */
@@ -94,6 +94,12 @@ a {
   cursor: pointer;
 }
 
+.listing-section {
+  clear: both;
+  margin-top: 50px;
+
+}
+
 .hero-slogan-section {
   font-size: 18px;
   font-weight: 500;
@@ -113,6 +119,10 @@ a {
 
 .pointer {
   cursor: pointer;
+}
+
+.search-input {
+  width: 400px;
 }
 
 .ant-input,

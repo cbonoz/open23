@@ -13,7 +13,6 @@ export default function ListingCard({ listing }) {
             router.push(`/listing/${listing.id}`)
         }}
         hoverable
-        style={{ width: 360, margin: 5, display: 'inline-block' }}
         actions={[
             <div key="purchases">Purchases: {listing.purchases}</div>,
             <div key="last sale">List Price: {listing.price} {ACTIVE_CHAIN.symbol}</div>,

@@ -1,5 +1,6 @@
 import { Database } from "@tableland/sdk";
 import { APP_NAME } from "./constant";
+import { ethers } from "ethers";
 
 // Create a database connection; since there is no signer,
 // table reads are possible but creates/writes are not
@@ -38,16 +39,19 @@ export const getListings = async (offset, limit) => {
 }
 
 export const createListing = async (listing) => {
-    const { meta: insert } = db.prepare(`insert into ${LISTING_TABLE} (name, created_by, created_at, image, description, purchases, price, address) values (?, ?, ?, ?, ?, ?, ?, ?);`)
-        .bind(listing.name, listing.createdBy, listing.createdAt, listing.image, listing.description, listing.purchases, listing.price, listing.address)
+    const priceWei = ethers.utils.parseEther(listing.price.toString()).toString()
+    console.log('create', listing, priceWei)
+    const { meta: insert } = await db.prepare(`insert into ${LISTING_TABLE} (name, created_by, created_at, image, description, purchases, price, address) values (?, ?, ?, ?, ?, ?, ?, ?);`)
+        .bind(listing.name, listing.createdBy, listing.createdAt, listing.image, listing.description, listing.purchases, priceWei, listing.address)
         .run();
-    console.log('insert', insert, insert.txn, insert.wait)
+    console.log('created', insert);
     return await insert.txn.wait();
 }
 
 export const createOffer = async (offer) => {
-    const { meta: insert } = db.prepare(`insert into ${OFFER_TABLE} (offer, created_by, created_at, listing_id) values (?, ?, ?, ?);`)
-        .bind(offer.offer, offer.createdBy, offer.createdAt, offer.listingId)
+    const priceWei = ethers.utils.parseEther(offer.offer.toString()).toString();
+    const { meta: insert } = await db.prepare(`insert into ${OFFER_TABLE} (offer, created_by, created_at, listing_id) values (?, ?, ?, ?);`)
+        .bind(priceWei, offer.createdBy, offer.createdAt, offer.listingId)
         .run();
     return await insert.txn.wait();
 

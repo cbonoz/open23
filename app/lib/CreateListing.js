@@ -5,10 +5,12 @@ import { Button, Input, Row, Col, Steps, Result, Divider } from "antd";
 import { listingUrl, ipfsUrl, getExplorerUrl, humanError, } from "../util";
 import { uploadFiles } from "../util/stor";
 import TextArea from "antd/lib/input/TextArea";
-import { EXAMPLE_ITEM, ACTIVE_CHAIN, APP_NAME } from "../util/constant";
+import { ACTIVE_CHAIN, APP_NAME } from "../util/constant";
+import { generateItem } from "../util/constant";
 import { FileDrop } from "./FileDrop";
 import { useWallet } from "../context/wallet";
 import { createListing } from "../util/tableland";
+import { ethers } from "ethers";
 import { deployContract } from "../util/listingContract";
 
 const { Step } = Steps;
@@ -30,7 +32,7 @@ function CreateListing() {
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState();
 
-  const setDemo = () => setData({ ...EXAMPLE_ITEM })
+  const setDemo = () => setData({ ...generateItem(1) })
 
   const updateData = (key, value) => {
     setData({ ...data, [key]: value });
@@ -74,19 +76,23 @@ function CreateListing() {
     let res = { ...data };
 
     try {
+      // TODO: add step 1/2 once tableland indexing ready.
       // 1) Create files/metadata to ipfs.
-      let cid = '';
-      if (files && files.length > 0) {
-        cid = await uploadFiles(
-          files,
-          res
-        );
-      } else {
-        throw new Error("No files found");
-      }
+      let cid = '123';
+      // if (files && files.length > 0) {
+      //   cid = await uploadFiles(
+      //     files,
+      //     res
+      //   );
+      // } else {
+      //   throw new Error("No files found");
+      // }
 
-      // 2) deploy contract with initial metadata
-      const contract = await deployContract(provider.signer, cid, res.price)
+      // // 2) deploy contract with initial metadata
+      // const contract = await deployContract(provider.signer, cid, res.price)
+      let contract = {
+        address: '0x1234'
+      }
       res["cid"] = cid;
       res["listingUrl"] = listingUrl(cid);
       res["contract"] = contract.address;
@@ -96,10 +102,12 @@ function CreateListing() {
       const listing = { ...data } // TODO: set all fields.
       listing['address'] = contract.address;
       try {
-        const listingResult = await createListing(listing);
+        // const price  = ethers.utils.parseEther(listing.price).toString()
+        const listingResult = await createListing(listing)
       } catch (e) {
         console.error('error creating db listing', e)
         res['dbError'] = JSON.stringify(e.message || e.response?.message || e)
+        throw e;
       }
 
       // Result rendered after successful doc upload + contract creation.
@@ -127,7 +135,7 @@ function CreateListing() {
       <Row>
         <Col span={16}>
           <div className="create-form white boxed">
-            {!result && <><h2>Create new datax listing</h2>
+            {!result && <><h2>Create new data listing</h2>
               <Divider />
               <a href="#" onClick={e => {
                 e.preventDefault()
@@ -248,9 +256,19 @@ function CreateListing() {
               className="standard-margin"
               direction="vertical"
               size="small"
+              items={[{
+                title: 'Fill in fields',
+                description: 'Enter required data.'
+              }, {
+                title: `Create ${APP_NAME} listing`,
+                description: 'Deploys a smart contract and creates a purchase page for the dataset'
+              }, {
+                title: 'Use the generated purchase page to sell your data',
+                description: 'Others can purchase the dataset from this url'
+              }]}
               current={getStep()}
             >
-              <Step title="Fill in fields" description="Enter required data." />
+              {/* <Step title="Fill in fields" description="Enter required data." />
               <Step
                 title={`Create ${APP_NAME} listing`}
                 description="Deploys a smart contract and creates a purchase page for the dataset"
@@ -258,7 +276,7 @@ function CreateListing() {
               <Step
                 title="Use the generated purchase page to sell your data"
                 description="Others can purchase the dataset from this url"
-              />
+              /> */}
             </Steps>
           </div>
         </Col>

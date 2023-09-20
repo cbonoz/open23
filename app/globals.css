@@ -46,7 +46,10 @@ a {
 }
 
 .listing-card {
-  margin: 5px;
+  margin: 10px;
+  display: inline-block;
+  width: 360px;
+  padding: 5px;
 }
 
 /* Old styles */
@@ -69,6 +72,7 @@ a {
 
 .container {
   max-width: 1000px;
+  min-width: 80%;
   /* margin: 0 auto; */
   flex-grow: 1;
   min-height: 80vh;

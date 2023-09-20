@@ -7,14 +7,18 @@ import Search from 'antd/es/input/Search'
 import Head from 'next/head'
 import ListingCard from './lib/ListingCard'
 import { EXAMPLE_ITEM, generateItem } from './util/constant'
-import { Spin } from 'antd'
+import { Pagination, Spin } from 'antd'
 import { getListings } from './util/tableland'
 import Script from 'next/script'
+
+const ITEMS = [generateItem(1), generateItem(2)]
 
 export default function Home() {
   const [loading, setLoading] = useState(false)
   const [searchValue, setSearchValue] = useState('')
-  const [listings, setListings] = useState([generateItem(1), generateItem(2)])
+  const [data, setData] = useState([]);
+  const [page, setPage] = useState(1);
+  const [pageSize, setPageSize] = useState(10);
 
   async function get() {
     setLoading(true)
@@ -31,32 +35,42 @@ export default function Home() {
 
   useEffect(() => {
     get()
-  }, [])
+  }, [page, pageSize])
 
 
   return (
     <div className='container'>
-      <h1>Search listings</h1>
-      <div className={styles.grid}>
-        <Search 
-        className='search-input'
-        placeholder="Search by listing name or description" 
-        onSearch={value => setSearchValue(value)} enterButton />
-        {loading && <div>
-          <Spin size='large' />
-        </div>}
+      <div className='centered'>
+        <h1>Search listings</h1>
         <br />
-        <br />
-        {!loading && <div className="listing-section">
-          {listings.map((listing, i) => {
-            return <ListingCard listing={listing} key={i} />
-          })}
-        </div>}
-        <br/>
-        {!loading && listings.length === 0 && <div>
+        <Search
+          className='search-input'
+          style={{ width: 600 }}
+          placeholder="Search by listing name or description"
+          onSearch={value => setSearchValue(value)} enterButton />
+      </div>
+      {loading && <div>
+        <Spin size='large' />
+      </div>}
+      {!loading && <div className="listing-section">
+        {data.map((listing, i) => {
+          return <ListingCard listing={listing} key={i} />
+        })}
+      </div>}
+      <div className='centered'>
+        {!loading && data.length === 0 && <div>
           No listings found
         </div>}
+        <br />
+        <Pagination
+          current={page}
+          total={data.length}
+          pageSize={pageSize}
+          onChange={(page) => setPage(page)}
+        />
+        <br />
       </div>
+
 
     </div>
   )

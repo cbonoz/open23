@@ -12,21 +12,26 @@ import {
     Spin,
     Divider,
     Modal,
+    Input,
 } from 'antd';
 import Image from 'next/image'
 import { abbreviate, convertCamelToHuman, getExplorerUrl } from '../util';
-import { EXAMPLE_OFFERS, STAT_KEYS } from '../util/constant';
+import { ACTIVE_CHAIN, EXAMPLE_OFFERS, STAT_KEYS } from '../util/constant';
 import { LineChart, PieChart } from 'react-chartkick'
 
 import 'chartkick/chart.js'
 import { purchaseContract } from '../util/listingContract';
+import { createOffer } from '../util/tableland';
 
 
 
 const ListingDetail = ({ item }) => {
     const [loading, setLoading] = useState(false)
     const [offerData, setOfferData] = useState(EXAMPLE_OFFERS)
-    const [offerVisible, setOfferVisible] = useState(false)
+    const [showOfferModal, setShowOfferModal] = useState(false)
+    const [amount, setAmount] = useState(0)
+
+    const { connect, provider, wallet, logout } = useWallet()
 
     if (!item) {
         return <Spin size='large' />
@@ -38,19 +43,41 @@ const ListingDetail = ({ item }) => {
     async function makePurchase() {
         setLoading(true)
         try {
-            const res = await purchaseContract(item.id)
+            const res = await purchaseContract(provider.signer, item.address, item.price)
             console.log('purchase', res)
         } catch (e) {
             console.error('error purchasing', e)
         } finally {
             setLoading(false)
         }
+    }
 
+    async function makeOffer() {
+        if (!amount || amount <= 0) {
+            alert('Please enter an offer more than 0' + ACTIVE_CHAIN.symbol)
+            return
+        }
+        setLoading(true)
+
+        const offer = {
+            amount,
+            listingId: item.id,
+            createdAt: Date.now(),
+            createdBy: wallet.account
+        }
+        try {
+            const res = await createOffer(offer)
+            console.log('make offer', res)
+        } catch (e) {
+            console.error('error making offer', e)
+        } finally {
+            setLoading(false)
+        }
     }
 
     return (
         <div className="listing-detail-page">
-            <Card title={<span style={{color: "green"}}>For Purchase</span>}>
+            <Card title={<span style={{ color: "green" }}>For Purchase</span>}>
                 <h1>{item.name}</h1>
                 <h3>{item.description}</h3>
                 <Divider />
@@ -59,8 +86,8 @@ const ListingDetail = ({ item }) => {
                     <Col span={12}>
                         <section className="product-images">
                             <Image width={450} height={150} src={item.image} alt={item.name} />
-                            <br/>
-                            <br/>
+                            <br />
+                            <br />
                         </section>
                         <section className="product-details">
                             <Statistic
@@ -96,16 +123,16 @@ const ListingDetail = ({ item }) => {
                                 <p>
                                     Purchase this dataset or make an offer.
                                 </p>
-                                <br/>
-                                <Button 
-                                loading={loading}
-                                disabled={loading}
-                                onClick={makePurchase}
-                                type="primary">Buy Now</Button>&nbsp;
+                                <br />
+                                <Button
+                                    loading={loading}
+                                    disabled={loading}
+                                    onClick={makePurchase}
+                                    type="primary">Buy Now</Button>&nbsp;
                                 {/* <Button type="default">Add to Cart</Button> */}
                                 <Button
-                                disabled={loading}
-                                 onClick={() => setOfferVisible(!offerVisible)} type="link">Make an Offer</Button>
+                                    disabled={loading}
+                                    onClick={() => setOfferVisible(!offerVisible)} type="link">Make an Offer</Button>
                             </section>
                         </Card>
                     </Col>
@@ -127,12 +154,24 @@ const ListingDetail = ({ item }) => {
 
             {/* TODO: enable offer */}
             <Modal
-                title="Make an Offer"
-                show={offerVisible}
-                onOk={() => setOfferVisible(false)}
-                onCancel={() => setOfferVisible(false)}
+                title="Make an offer on this dataset"
+                open={showOfferModal}
+                okText="Make offer"
+                onOk={makeOffer}
+                confirmLoading={loading}
+                onCancel={() => setShowOfferModal(false)}
             >
-                <p>Content</p>
+                <h5>{item?.name}</h5>
+                <p>Make an offer for this dataset:</p>
+
+                <Input
+                    type="number"
+                    placeholder={`Enter amount (${ACTIVE_CHAIN.symbol})`}
+                    value={amount}
+                    onError={(e) => console.log('error', e)}
+                    onChange={(e) => setAmount(e.target.value)}
+                />
+
             </Modal>
 
 

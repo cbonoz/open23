@@ -20,7 +20,7 @@ export const EXAMPLE_ITEM = {
     "id": 1,
     "address": "0x1234",
     "name": "Oil price data set",
-    "image": "https://ucf22d9ff17162a511cc6f67db28.previews.dropboxusercontent.com/p/thumb/ACApKg5UZ-luovjuPTrsU1d05o_BzW_ORaUmbVRe-czPECbMyTgJrz6fqdjQgCe11wNoOtWXxrE9yGY2B6kFfSSvNJbYBC_colmbPOXs8qQ8OfZIIIdH4l5_j8QcCSZxIuPmKX84XiVRSQufldee9Oc3AoNOaXLL99VE1lEChnS35M7BjHMNpdYinTDgG5CQfdI_FKku6xhl6OK26UQeKxDCagZX0FRrpd3_so0112g_1OuX6w-oT90vOe6ij5D4e5tfbTY4y4xgfGvRJpDqjUtcvjH7mjcP7IXBQFYaULEp2hmRv9Ixy--dgJYWqCGwJ0DguvaSAEBMO9t0SZxamUXGF15REjF-JPntuKBx5NSRPQ/p.png",
+    "image": "https://i.ibb.co/6YfmGCS/oilprices.png",
     "description": "The data contains Weekly crude oil prices from 1987 to 9/2023",
     "tags": ["oil", "price", "energy"],
     "purchases": 0,

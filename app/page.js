@@ -10,6 +10,7 @@ import { EXAMPLE_ITEM, generateItem } from './util/constant'
 import { Pagination, Spin } from 'antd'
 import { getListings } from './util/tableland'
 import Script from 'next/script'
+import { isEmpty } from './util'
 
 const ITEMS = [generateItem(1), generateItem(2)]
 
@@ -25,6 +26,9 @@ export default function Home() {
     try {
       const res = await getListings(0, 100)
       console.log('get listings', res)
+      if (isEmpty(res)) {
+        setData(ITEMS)
+      }
       // setListings(res)
     } catch (e) {
       console.error('error getting listings', e)

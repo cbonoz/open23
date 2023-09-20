@@ -7,7 +7,7 @@ import { ethers } from "ethers";
 const LISTING_TABLE = process.env.NEXT_PUBLIC_LISTING_TABLE;
 const OFFER_TABLE = process.env.NEXT_PUBLIC_OFFER_TABLE;
 
-const db = new Database();
+const db = new Database({autoWait: false});
 
 // This is the table's `prefix`--a custom table value prefixed as part of the table's name
 
@@ -49,7 +49,7 @@ export const createListing = async (listing) => {
 }
 
 export const createOffer = async (offer) => {
-    const priceWei = ethers.utils.parseEther(offer.offer.toString()).toString();
+    const priceWei = ethers.utils.parseEther(offer.amount.toString()).toString();
     const { meta: insert } = await db.prepare(`insert into ${OFFER_TABLE} (offer, created_by, created_at, listing_id) values (?, ?, ?, ?);`)
         .bind(priceWei, offer.createdBy, offer.createdAt, offer.listingId)
         .run();

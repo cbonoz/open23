@@ -1,37 +1,42 @@
 import { IPFS_BASE_URL, ACTIVE_CHAIN } from '../util/constant'
 
 export function addMinutes(numOfMinutes, date = new Date()) {
-    date.setMinutes(date.getMinutes() + numOfMinutes);
-    return date;
+  date.setMinutes(date.getMinutes() + numOfMinutes);
+  return date;
 }
 
 export const abbreviate = s => s ? `${s.substr(0, 6)}**` : ''
 
 export const formatDate = (d) => {
-    if (!(d instanceof Date)) {
-        d = d ? new Date(d) : new Date()
-    }
-    return `${d.toLocaleDateString()} ${d.toLocaleTimeString()}`
+  if (!(d instanceof Date)) {
+    d = d ? new Date(d) : new Date()
+  }
+  return `${d.toLocaleDateString()} ${d.toLocaleTimeString()}`
 }
 
 export const ipfsUrl = (cid, fileName) => {
-    // let url = `https://ipfs.io/ipfs/${cid}`;
-    let url = `${IPFS_BASE_URL}/${cid}`
-    if (fileName) {
-      return `${url}/${fileName}`;
-    }
-    return url;
-  };
+  // let url = `https://ipfs.io/ipfs/${cid}`;
+  let url = `${IPFS_BASE_URL}/${cid}`
+  if (fileName) {
+    return `${url}/${fileName}`;
+  }
+  return url;
+};
 
 export const listingUrl = (cid) => `${window.location.origin}/listing/${cid}`;
 
 export const convertCamelToHuman = (str) => {
-    return str
-        .replace(/([A-Z])/g, " $1")
-        .replace(/^./, function (str) {
-            return str.toUpperCase();
-        });
-      }
+  // Check if likely datetime timestamp ms
+  if (str.length === 13) {
+    return new Date(str).toLocaleDateString();
+  }
+
+  return str
+    .replace(/([A-Z])/g, " $1")
+    .replace(/^./, function (str) {
+      return str.toUpperCase();
+    });
+}
 
 export function capitalize(string) {
   return string.charAt(0).toUpperCase() + string.slice(1);
@@ -53,6 +58,10 @@ export const col = (k, render) => ({
   key: k,
   render,
 });
+
+export const isEmpty = (r) => {
+  return !r || r.length === 0
+}
 
 export const humanError = message => {
   if (message.indexOf('404') !== -1) {

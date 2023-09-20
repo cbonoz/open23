@@ -17,11 +17,13 @@ import {
 import Image from 'next/image'
 import { abbreviate, convertCamelToHuman, getExplorerUrl } from '../util';
 import { ACTIVE_CHAIN, EXAMPLE_OFFERS, STAT_KEYS } from '../util/constant';
-import { LineChart, PieChart } from 'react-chartkick'
+import { LineChart, PieChart, BarChart } from 'react-chartkick'
 
-import 'chartkick/chart.js'
 import { purchaseContract } from '../util/listingContract';
 import { createOffer } from '../util/tableland';
+
+import 'chartkick/chart.js'
+import { useWallet } from '../context/wallet';
 
 
 
@@ -85,7 +87,7 @@ const ListingDetail = ({ item }) => {
 
                     <Col span={12}>
                         <section className="product-images">
-                            <Image width={450} height={150} src={item.image} alt={item.name} />
+                            <Image width={450} height={300} src={item.image} alt={item.name} />
                             <br />
                             <br />
                         </section>
@@ -132,7 +134,18 @@ const ListingDetail = ({ item }) => {
                                 {/* <Button type="default">Add to Cart</Button> */}
                                 <Button
                                     disabled={loading}
-                                    onClick={() => setOfferVisible(!offerVisible)} type="link">Make an Offer</Button>
+                                    onClick={async () => {
+                                        if (!wallet?.account) {
+                                            try {
+                                                await connect()
+                                            } catch (e) {
+                                                console.error('error connecting', e)
+                                                alert('Connection declined')
+                                                return
+                                            }
+                                        } 
+                                        setShowOfferModal(!showOfferModal) 
+                                    }} type="link">Make an Offer</Button>
                             </section>
                         </Card>
                     </Col>
@@ -144,7 +157,7 @@ const ListingDetail = ({ item }) => {
                         {/* https://chartkick.com/react */}
 
                         {/* Chart */}
-                        <LineChart data={offerData} />
+                        <LineChart data={offerData} xtitle="Time" ytitle={ACTIVE_CHAIN.symbol} />
 
 
                     </Col>
@@ -154,19 +167,22 @@ const ListingDetail = ({ item }) => {
 
             {/* TODO: enable offer */}
             <Modal
-                title="Make an offer on this dataset"
+                title={item?.name}
                 open={showOfferModal}
                 okText="Make offer"
                 onOk={makeOffer}
                 confirmLoading={loading}
                 onCancel={() => setShowOfferModal(false)}
             >
-                <h5>{item?.name}</h5>
-                <p>Make an offer for this dataset:</p>
+                {/* <h3>{item?.name}</h3> */}
+                <h3>Make an offer on this dataset:</h3>
+                <Divider/>
+                <p>Listing price: {item?.price}</p>
 
                 <Input
                     type="number"
                     placeholder={`Enter amount (${ACTIVE_CHAIN.symbol})`}
+                    prefix={`Offer (${ACTIVE_CHAIN.symbol}):`}
                     value={amount}
                     onError={(e) => console.log('error', e)}
                     onChange={(e) => setAmount(e.target.value)}

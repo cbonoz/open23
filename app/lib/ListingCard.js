@@ -7,6 +7,11 @@ import { ACTIVE_CHAIN } from "../util/constant";
 
 export default function ListingCard({ listing }) {
     const router = useRouter()
+
+    const desc = <span>
+        {listing.description.substring(0, 100)}...<br/>
+        Uploaded: {new Date(listing.createdAt).toLocaleDateString()}
+    </span>
     return <Card
         className="listing-card"
         onClick={() => {
@@ -18,7 +23,7 @@ export default function ListingCard({ listing }) {
             <div key="last sale">List Price: {listing.price} {ACTIVE_CHAIN.symbol}</div>,
         ]}
         cover={<Image alt={listing.name} width={240} height={240} src={listing.image} />}>
-        <Card.Meta title={listing.name} description={listing.description} />
+        <Card.Meta title={listing.name} description={desc}/>
     </Card>
 
 }

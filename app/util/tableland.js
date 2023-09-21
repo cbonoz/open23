@@ -23,7 +23,7 @@ export const setupTables = async () => {
         .run();
 
     const { meta: createOffer } = await db
-        .prepare(`CREATE TABLE ${offerTableName} (id integer primary key, offer integer, created_by text, created_at integer, listing_id integer);`)
+        .prepare(`CREATE TABLE ${offerTableName} (id integer primary key, amount integer, created_by text, created_at integer, listing_id integer, address text);`)
         .run();
 
     // The table's `name` is in the format `{prefix}_{chainId}_{tableId}`
@@ -50,8 +50,8 @@ export const createListing = async (listing) => {
 
 export const createOffer = async (offer) => {
     const priceWei = ethers.utils.parseEther(offer.amount.toString()).toString();
-    const { meta: insert } = await db.prepare(`insert into ${OFFER_TABLE} (offer, created_by, created_at, listing_id) values (?, ?, ?, ?);`)
-        .bind(priceWei, offer.createdBy, offer.createdAt, offer.listingId)
+    const { meta: insert } = await db.prepare(`insert into ${OFFER_TABLE} (amount, created_by, created_at, listing_id, address) values (?, ?, ?, ?, ?);`)
+        .bind(priceWei, offer.createdBy, offer.createdAt, offer.listingId, offer.address)
         .run();
     return await insert.txn.wait();
 

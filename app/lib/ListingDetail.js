@@ -15,15 +15,16 @@ import {
     Input,
 } from 'antd';
 import Image from 'next/image'
-import { abbreviate, convertCamelToHuman, getExplorerUrl } from '../util';
+import { abbreviate, convertCamelToHuman, formatCurrency, getExplorerUrl, humanError } from '../util';
 import { ACTIVE_CHAIN, EXAMPLE_OFFERS, STAT_KEYS } from '../util/constant';
 import { LineChart, PieChart, BarChart } from 'react-chartkick'
 
 import { purchaseContract } from '../util/listingContract';
-import { createOffer } from '../util/tableland';
+import { createOffer, getOffersForListing } from '../util/tableland';
 
 import 'chartkick/chart.js'
 import { useWallet } from '../context/wallet';
+import { ethers } from 'ethers';
 
 
 
@@ -70,12 +71,11 @@ const ListingDetail = ({ item }) => {
             console.log('purchase', res)
         } catch (e) {
             console.error('error purchasing', e)
+            alert('Error purchasing: ' + humanError(e));
         } finally {
             setLoading(false)
         }
     }
-
-
     async function makeOffer() {
         if (!amount || amount <= 0) {
             alert('Please enter an offer more than 0' + ACTIVE_CHAIN.symbol)
@@ -87,7 +87,8 @@ const ListingDetail = ({ item }) => {
             amount,
             listingId: item.id,
             createdAt: Date.now(),
-            createdBy: wallet.account
+            createdBy: wallet.account,
+            address: item.address
         }
         try {
             const res = createOffer(offer)
@@ -147,7 +148,7 @@ const ListingDetail = ({ item }) => {
                                 style={{ display: 'inline-block', marginRight: 32 }}
                                 title={"Price "}
                                 valueRender={
-                                    () => <span>{item.price} {ACTIVE_CHAIN.symbol}</span>
+                                    () => <span>{ethers.utils.formatEther(item.price)} {ACTIVE_CHAIN.symbol}</span>
                                 }
                             />
 
@@ -178,7 +179,7 @@ const ListingDetail = ({ item }) => {
                         <Card title="Purchase">
                             <section className="product-actions">
                                 <p>
-                                    <b>Listing Price: {item.price} {item.currency}</b>
+                                    <b>Listing Price: {formatCurrency(item.amount)} </b>
                                     <br />
                                 </p>
                                 <p>
@@ -187,22 +188,14 @@ const ListingDetail = ({ item }) => {
                                 <br />
                                 <Button
                                     loading={loading}
-                                    disabled={loading}
+                                    disabled={!wallet || loading}
                                     onClick={makePurchase}
-                                    type="primary">Buy Now</Button>&nbsp;
+                                    type="primary">{wallet ? 'Buy Now' : 'Connect Wallet'}</Button>&nbsp;
                                 {/* <Button type="default">Add to Cart</Button> */}
                                 <Button
                                     disabled={loading}
                                     onClick={async () => {
-                                        if (!wallet?.account) {
-                                            try {
-                                                await connect()
-                                            } catch (e) {
-                                                console.error('error connecting', e)
-                                                alert('Connection declined')
-                                                return
-                                            }
-                                        }
+                                        await checkWallet()
                                         setShowOfferModal(!showOfferModal)
                                     }} type="link">Make an Offer</Button>
                             </section>
@@ -235,7 +228,7 @@ const ListingDetail = ({ item }) => {
             >
                 {/* <h3>{item?.name}</h3> */}
                 <h3>Make an offer on this dataset</h3>
-                <p>Listing price: {item?.price}</p>
+                <p>Listing price: {formatCurrency(item.amount)}</p>
                 <Divider />
 
                 <Input

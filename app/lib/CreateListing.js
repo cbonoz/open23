@@ -79,23 +79,25 @@ function CreateListing() {
       // TODO: add step 1/2 once tableland indexing ready.
       // 1) Create files/metadata to ipfs.
       let cid = '123';
-      // if (files && files.length > 0) {
-      //   cid = await uploadFiles(
-      //     files,
-      //     res
-      //   );
-      // } else {
-      //   throw new Error("No files found");
-      // }
-
-      // // 2) deploy contract with initial metadata
-      // const contract = await deployContract(provider.signer, cid, res.price)
-      let contract = {
-        address: '0x1234'
+      if (files && files.length > 0) {
+        cid = await uploadFiles(
+          files,
+          res
+        );
+      } else {
+        throw new Error("No files found");
       }
+
+      // 2) deploy contract with initial metadata
+      let contract;
+      const priceWei = ethers.utils.parseEther(res.price.toString()).toString();
+      contract = await deployContract(provider.signer, cid, priceWei);
+      // contract = {
+      //   address: '0x1234'
+      // }
       res["cid"] = cid;
-      res["listingUrl"] = listingUrl(cid);
       res["contract"] = contract.address;
+      res["listingUrl"] = listingUrl(contract.address || cid);
       res["contractUrl"] = getExplorerUrl(contract.address);
 
       // 3) create table entry
@@ -103,11 +105,10 @@ function CreateListing() {
       listing['address'] = contract.address;
       try {
         // const price  = ethers.utils.parseEther(listing.price).toString()
-        const listingResult = await createListing(listing)
+        const listingResult = createListing(listing)
       } catch (e) {
         console.error('error creating db listing', e)
-        res['dbError'] = JSON.stringify(e.message || e.response?.message || e)
-        throw e;
+        // res['dbError'] = JSON.stringify(e.message || e.response?.message || e)
       }
 
       // Result rendered after successful doc upload + contract creation.
@@ -226,7 +227,7 @@ function CreateListing() {
             {error && <div className="error-text">Error: {error}</div>}
             {result && (<div>
               <Result status="success"
-                title="Created datax request!" subTitle="Access your page and content below" />
+                title="Listing created!" subTitle="Access your data page and content below" />
               <div>
                 <a href={ipfsUrl(result.cid)} target="_blank">
                   View files
@@ -238,7 +239,7 @@ function CreateListing() {
                 <br />
                 <br />
                 <p>
-                  Share or post this page with potential customers
+                  Share or post this page with potential buyers:
                   <br />
                   <a href={result.listingUrl} target="_blank">
                     View listing page

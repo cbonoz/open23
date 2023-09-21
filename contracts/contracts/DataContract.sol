@@ -17,17 +17,15 @@ contract DataContract {
     active = true;
   }
 
-  function purchaseAccess() public payable {
+  function purchaseAccess() public payable returns (string memory) {
     require(active, "Contract was marked inactive by creator");
-    if (price == 0) {
-      hasAccess[msg.sender] = true;
-      return;
+    if (price != 0) {
+      require(msg.value == price, "Incorrect price, please call contract with nonzero value");
+      // Transfer to deployer.
+      payable(deployer).transfer(msg.value);
     }
-
-    require(msg.value == price, "Incorrect price, please call contract with nonzero value");
-    // Transfer to deployer.
-    payable(deployer).transfer(msg.value);
     hasAccess[msg.sender] = true;
+    return cid;
   }
 
   // get price

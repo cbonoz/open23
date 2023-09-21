@@ -24,7 +24,7 @@ export async function purchaseContract(signer, contractAddress, price) {
         signer
     );
     // log
-    const tx = await contract.purchase({ value: price });
+    const tx = await contract.purchaseAccess({ value: price });
     await tx.wait();
     console.log("Purchased contract...", tx);
     return tx;

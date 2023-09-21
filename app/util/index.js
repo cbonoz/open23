@@ -14,6 +14,15 @@ export const formatDate = (d) => {
   return `${d.toLocaleDateString()} ${d.toLocaleTimeString()}`
 }
 
+export const formatCurrency = (amount) => {
+  if (amount === 0) {
+    return 'Free'
+  } else if (!amount) {
+    return ''
+  }
+  return `${amount} ${ACTIVE_CHAIN.symbol}`
+}
+
 export const ipfsUrl = (cid, fileName) => {
   // let url = `https://ipfs.io/ipfs/${cid}`;
   let url = `${IPFS_BASE_URL}/${cid}`
@@ -23,7 +32,7 @@ export const ipfsUrl = (cid, fileName) => {
   return url;
 };
 
-export const listingUrl = (cid) => `${window.location.origin}/listing/${cid}`;
+export const listingUrl = (listingId) => `${window.location.origin}/listing/${listingId}`;
 
 export const convertCamelToHuman = (str) => {
   // Check if likely datetime timestamp ms

@@ -38,6 +38,14 @@ Tableland: Tableland is employed to manage the complex data relationships within
 
 web3.storage: To address the challenge of decentralized storage, we integrated web3.storage, which utilizes blockchain technology to securely store and retrieve data files.
 
+                Filecoin Saturn: Saturn-secured .car files with verification have several advantages over trusting the server:
+
+                <li>Decentralization: Filecoin is a decentralized storage network, meaning that files are stored on multiple nodes around the world. This makes it more resistant to censorship and hacking.</li>
+                <li>Transparency: Filecoin Saturn car files are verified using a cryptographic proof-of-retrieval mechanism. This means that you can be sure that your files are stored and retrievable, even if the server is unavailable or untrustworthy.</li>
+                <li>Efficiency: Filecoin Saturn car files are compressed and deduplicated, which means that they take up less storage space and can be transferred more quickly.</li>
+                <li>Cost-effectiveness: Filecoin Saturn car files are stored on a peer-to-peer network, which means that you don't have to pay for expensive cloud storage.</li>
+</ol>
+
 DataverseOS: Authentication and user state management.
 
 Saturn: Data validation (using browser client). https://github.com/filecoin-saturn/browser-client

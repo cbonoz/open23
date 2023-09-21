@@ -10,7 +10,7 @@ export const ACTIVE_CHAIN = {
 
 export const EXAMPLE_ITEM = {
     "id": 1,
-    "address": "0x1234",
+    "address": "0x3CCAFaC2Cd44664bBb22F1fe9FBaEbcfcFFB2898",
     "name": "Oil price data set",
     "image": "https://i.ibb.co/6YfmGCS/oilprices.png",
     "description": "The data contains Weekly crude oil prices from 5/1987 to 9/2023",
@@ -37,5 +37,6 @@ export const generateItem = (id) => {
 
 
 // export const IPFS_BASE_URL = 'https://ipfs.filebase.io/ipfs'
-export const IPFS_BASE_URL = 'https://gateway.pinata.cloud/ipfs'
+// export const IPFS_BASE_URL = 'https://gateway.pinata.cloud/ipfs'
+export const IPFS_BASE_URL = 'https://saturn.ms/ipfs'
 

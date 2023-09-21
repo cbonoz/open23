@@ -31,9 +31,30 @@ const ListingDetail = ({ item }) => {
     const [loading, setLoading] = useState(false)
     const [offerData, setOfferData] = useState(EXAMPLE_OFFERS)
     const [showOfferModal, setShowOfferModal] = useState(false)
-    const [amount, setAmount] = useState(0)
+    const [amount, setAmount] = useState(1 || item.price)
 
     const { connect, provider, wallet, logout } = useWallet()
+
+
+    useEffect(() => {
+
+        async function fetchOffers(listingId) {
+            // try / catch, no loading
+            // setLoading(true)
+            try {
+                const res = await getOffersForListing(listingId)
+                console.log('offers', res)
+                setOfferData(res)
+            } catch (e) {
+                console.error('error getting offers', e)
+            } finally {
+            }
+        }
+        if (item) {
+            fetchOffers(item.address)
+        }
+    }, [item])
+
 
     if (!item) {
         return <Spin size='large' />
@@ -54,6 +75,7 @@ const ListingDetail = ({ item }) => {
         }
     }
 
+
     async function makeOffer() {
         if (!amount || amount <= 0) {
             alert('Please enter an offer more than 0' + ACTIVE_CHAIN.symbol)
@@ -68,11 +90,13 @@ const ListingDetail = ({ item }) => {
             createdBy: wallet.account
         }
         try {
-            const res = await createOffer(offer)
+            const res = createOffer(offer)
             console.log('make offer', res)
         } catch (e) {
             console.error('error making offer', e)
         } finally {
+            // greedy add.
+            setOfferData([...offerData, [new Date().toLocaleDateString(), amount]])
             setLoading(false)
         }
     }
@@ -95,13 +119,47 @@ const ListingDetail = ({ item }) => {
                             <Statistic
                                 style={{ display: 'inline-block', marginRight: 32 }}
                                 title={"Created by"}
-                                value={
-                                    <a href={getExplorerUrl(createdAddress)} target="_blank">
-                                        {abbreviate(createdAddress)}
-                                    </a>
+                                valueRender={() => <a href={getExplorerUrl(createdAddress)} target="_blank">
+                                    {abbreviate(createdAddress)}
+                                </a>
                                 }
                             />
 
+                            <Statistic
+                                style={{ display: 'inline-block', marginRight: 32 }}
+                                title={"Created at"}
+                                valueRender={
+                                    () => <span>{new Date(item.createdAt).toLocaleDateString()}</span>
+                                }
+                            />
+
+
+                            <Statistic
+                                style={{ display: 'inline-block', marginRight: 32 }}
+                                title={"Purchases"}
+                                valueRender={
+                                    () => <span>{item.purchases}</span>
+                                }
+                            />
+
+
+                            <Statistic
+                                style={{ display: 'inline-block', marginRight: 32 }}
+                                title={"Price "}
+                                valueRender={
+                                    () => <span>{item.price} {ACTIVE_CHAIN.symbol}</span>
+                                }
+                            />
+
+                            {item.size && <Statistic
+                                style={{ display: 'inline-block', marginRight: 32 }}
+                                title={"Size"}
+                                valueRender={
+                                    () => <span>{item.size} B</span>
+                                } />}
+
+
+                            {/* 
                             {STAT_KEYS.map((key, i) => {
                                 return (<span
                                     key={i}
@@ -112,7 +170,7 @@ const ListingDetail = ({ item }) => {
                                         value={item[key]} />
                                 </span>
                                 )
-                            })}
+                            })} */}
                         </section>
                     </Col>
                     <Col span={12}>
@@ -120,7 +178,8 @@ const ListingDetail = ({ item }) => {
                         <Card title="Purchase">
                             <section className="product-actions">
                                 <p>
-                                    <b>Price: {item.price} {item.currency}</b>
+                                    <b>Listing Price: {item.price} {item.currency}</b>
+                                    <br />
                                 </p>
                                 <p>
                                     Purchase this dataset or make an offer.
@@ -143,8 +202,8 @@ const ListingDetail = ({ item }) => {
                                                 alert('Connection declined')
                                                 return
                                             }
-                                        } 
-                                        setShowOfferModal(!showOfferModal) 
+                                        }
+                                        setShowOfferModal(!showOfferModal)
                                     }} type="link">Make an Offer</Button>
                             </section>
                         </Card>
@@ -175,14 +234,14 @@ const ListingDetail = ({ item }) => {
                 onCancel={() => setShowOfferModal(false)}
             >
                 {/* <h3>{item?.name}</h3> */}
-                <h3>Make an offer on this dataset:</h3>
-                <Divider/>
+                <h3>Make an offer on this dataset</h3>
                 <p>Listing price: {item?.price}</p>
+                <Divider />
 
                 <Input
                     type="number"
                     placeholder={`Enter amount (${ACTIVE_CHAIN.symbol})`}
-                    prefix={`Offer (${ACTIVE_CHAIN.symbol}):`}
+                    prefix={`Your offer (${ACTIVE_CHAIN.symbol}):`}
                     value={amount}
                     onError={(e) => console.log('error', e)}
                     onChange={(e) => setAmount(e.target.value)}

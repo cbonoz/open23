@@ -57,9 +57,9 @@ export const createOffer = async (offer) => {
 
 }
 
-export const getOffersForListing = async (listingId) => {
-    const { results } = await db.prepare(`SELECT * FROM ${OFFER_TABLE} where listing_id=?;`)
-        .bind(listingId)
+export const getOffersForListing = async (address) => {
+    const { results } = await db.prepare(`SELECT * FROM ${OFFER_TABLE} where address=?;`)
+        .bind(address)
         .all();
     return results;
 }

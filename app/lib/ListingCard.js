@@ -10,7 +10,7 @@ export default function ListingCard({ listing }) {
 
     const desc = <span>
         {listing.description.substring(0, 100)}...<br/>
-        Uploaded: {new Date(listing.createdAt).toLocaleDateString()}
+        <b>Uploaded: {new Date(listing.createdAt).toLocaleDateString()}</b>
     </span>
     return <Card
         className="listing-card"

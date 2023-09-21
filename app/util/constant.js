@@ -8,14 +8,6 @@ export const ACTIVE_CHAIN = {
     explorerUrl: 'https://calibration.filscan.io/',
 }
 
-export const STAT_KEYS = [
-    'purchases',
-    'price',
-    'size',
-    'tags',
-    'createdAt'
-]
-
 export const EXAMPLE_ITEM = {
     "id": 1,
     "address": "0x1234",

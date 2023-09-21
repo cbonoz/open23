@@ -71,9 +71,9 @@ a {
 }
 
 .container {
-  max-width: 1000px;
+  /* max-width: 1000px; */
   min-width: 80%;
-  /* margin: 0 auto; */
+  margin: 0 auto;
   flex-grow: 1;
   min-height: 80vh;
   margin-top: 40px;
@@ -90,6 +90,10 @@ a {
 
 .error-text {
   color: red;
+}
+
+.bold {
+  font-weight: bold;
 }
 
 .dropzone {

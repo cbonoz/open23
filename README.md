@@ -7,30 +7,51 @@
 DataX
 ---
 
-DataX is a bid/ask marketplace for data similar to StockX where folks can list data for sale and then people can set their asking price. Built using NextJS, Filecoin FVM, Tableland, Saturn, and web3.storage.
+DataX is a bid/ask marketplace for data similar to StockX where users can list data their unique and curated datasets for sale with the ability for public search and potential buyers to set their asking price. 
+
+Built using NextJS, Filecoin FVM, Tableland, Dataverse, Saturn, and web3.storage.
 
 ## Inspiration
 
-The inspiration for DataX came from the need for a reliable and efficient marketplace where data can be traded just like other commodities. We wanted to create a platform that empowers data owners to monetize their data assets while allowing data consumers to access valuable information in a transparent and decentralized manner.
 
+DataX creates a community around the curation and sharing and of both publically and privately created datasets.
+
+The inspiration for DataX came from the need for a reliable and efficient marketplace where data can be traded just like other commodities. 
+
+Existing data marketplaces have shown significant shortcomings that hinder their effectiveness and impede the seamless exchange of data:
+
+1. Lack of Transparency: Many data marketplaces operate opaquely, making it difficult for data consumers to assess the quality and provenance of the data they seek. DataX, on the other hand, is built on a foundation of transparency, ensuring that users have access to comprehensive information about each dataset's source, history, and reliability.
+
+2. Centralization and Monopoly: Traditional data marketplaces are often centralized, controlled by a single entity, which can lead to monopolistic practices, inflated prices, and limited choices. DataX adopts a decentralized approach, empowering data owners to set their own prices and enabling a competitive, diverse ecosystem.
+
+3. Inflexible Pricing Models: Existing platforms may offer limited flexibility in pricing, making it challenging for data sellers to maximize the value of their assets. DataX allows data providers to name their price and even adjust it based on previous offers, facilitating fair negotiations and dynamic pricing strategies.
+
+4. Inefficient Data Discovery: Finding the right dataset can be like searching for a needle in a haystack on some platforms, as they lack effective search and recommendation systems. DataX employs advanced algorithms to streamline data discovery, ensuring that data consumers can easily find the information they need. Each dataset on DataX gets it's own public purchase url that can be shared on the web.
+
+5. Data Ownership and Security Concerns: Many data marketplaces do not adequately address data ownership and security concerns. DataX prioritizes data ownership rights and employs cutting-edge security measures to protect data throughout its lifecycle.
+
+ We wanted to create a platform that empowers data owners to monetize their data assets while allowing data consumers to access valuable information in a transparent and decentralized manner. Sellers of the data can name their price to reveal a dataset and potential purchaser can either immediately buy it or make an offer. The seller can later change their price to match previous offers.
 
 
 ## What it does
 
 DataX provides a user-friendly interface for listing various types of data sets. Data owners can upload their data, set a minimum asking price, and choose whether to list their data as an auction or for direct purchase. On the other side, data consumers can search for specific data sets, place bids in auctions, or directly purchase data at the listed prices.
 
+Each uploaded data set gets its own FVM smart contract and unique url identified by the contract address. When a listing visitor purchases a dataset, a transaction is made against the listing contract, a transaction and transfer via the contract is recorded, and lastly Saturn securely delivers the car file representation of the data to the buyer via the cid.
+
+
 
 ### Core functions
 * Create listing
-* Quick listing filter
+* Search listings with quick listing filter
 * Buy listing
 * Make offer
 * See offers
+* View data set access history.
 
 
-## How we built it
+## Technologies used
 
-NextJS: We utilized NextJS to create a responsive and interactive frontend interface that offers a seamless browsing experience for users. Deployed on surge.
 
 Filecoin FVM: The Filecoin File Verification Marketplace (FVM) integration ensures the security and immutability of listed data. This technology guarantees that data remains tamper-proof and accessible only to authorized users.
 
@@ -38,18 +59,14 @@ Tableland: Tableland is employed to manage the complex data relationships within
 
 web3.storage: To address the challenge of decentralized storage, we integrated web3.storage, which utilizes blockchain technology to securely store and retrieve data files.
 
-                Filecoin Saturn: Saturn-secured .car files with verification have several advantages over trusting the server:
+Filecoin Saturn: Saturn secures each data set client side with .car files delivered to the purchaser that guarantee additional tamper and hack-proofing from the original upload time (i.e. the original dataset is verified to be the one delivered on purchase). Validation is done using a hosted browser client service worker.
 
-                <li>Decentralization: Filecoin is a decentralized storage network, meaning that files are stored on multiple nodes around the world. This makes it more resistant to censorship and hacking.</li>
-                <li>Transparency: Filecoin Saturn car files are verified using a cryptographic proof-of-retrieval mechanism. This means that you can be sure that your files are stored and retrievable, even if the server is unavailable or untrustworthy.</li>
-                <li>Efficiency: Filecoin Saturn car files are compressed and deduplicated, which means that they take up less storage space and can be transferred more quickly.</li>
-                <li>Cost-effectiveness: Filecoin Saturn car files are stored on a peer-to-peer network, which means that you don't have to pay for expensive cloud storage.</li>
-</ol>
+DataverseOS: Authentication and user state management plugging into existing wallets and providers the customer may already use (i.e. metamask).
 
-DataverseOS: Authentication and user state management.
+NextJS: We utilized NextJS to create a responsive and interactive frontend interface that offers a seamless browsing experience for users. Deployed on surge.
 
-Saturn: Data validation (using browser client). https://github.com/filecoin-saturn/browser-client
 
+<!-- Saturn: Data validation (using browser client). https://github.com/filecoin-saturn/browser-client -->
 
 
 ## Running the project

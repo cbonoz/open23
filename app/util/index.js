@@ -1,4 +1,4 @@
-import { IPFS_BASE_URL, ACTIVE_CHAIN } from '../util/constant'
+import { IPFS_BASE_URL, ACTIVE_CHAIN } from '../constants'
 
 export function addMinutes(numOfMinutes, date = new Date()) {
   date.setMinutes(date.getMinutes() + numOfMinutes);
@@ -14,7 +14,7 @@ export const formatDate = (d) => {
   return `${d.toLocaleDateString()} ${d.toLocaleTimeString()}`
 }
 
-export const formatCurrency = (amount) => {
+export const formatCurrency = (amount, symbol) => {
   if (amount === 0) {
     return 'Free'
   } else if (!amount) {

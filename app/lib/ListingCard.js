@@ -1,7 +1,7 @@
 import { Card } from "antd";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { ACTIVE_CHAIN } from "../util/constant";
+import { ACTIVE_CHAIN } from "../constants";
 
 
 
@@ -22,7 +22,7 @@ export default function ListingCard({ listing }) {
             <div key="purchases">Purchases: {listing.purchases}</div>,
             <div key="last sale">List Price: {listing.price} {ACTIVE_CHAIN.symbol}</div>,
         ]}
-        cover={<Image alt={listing.name} width={240} height={240} src={listing.image} />}>
+        cover={<Image alt={listing.name} width={200} height={200} src={listing.image} />}>
         <Card.Meta title={listing.name} description={desc}/>
     </Card>
 

@@ -1,97 +1,55 @@
 'use client'
 
-import Image from 'next/image'
-import styles from './page.module.css'
-import { useContext, useEffect, useState } from 'react'
-import Search from 'antd/es/input/Search'
-import Head from 'next/head'
-import ListingCard from './lib/ListingCard'
-import { EXAMPLE_ITEM, generateItem } from './util/constant'
-import { Pagination, Spin } from 'antd'
-import { getListings } from './util/tableland'
-import Script from 'next/script'
-import { isEmpty } from './util'
+import React, { useState, } from 'react'
+import { Button, Spin, Row, Col } from 'antd';
+import { APP_DESC, APP_NAME } from './constants';
+import { CheckCircleTwoTone } from '@ant-design/icons';
+import Image from 'next/image';
 
-const ITEMS = [generateItem(1), generateItem(2)]
-
-import Fuse from "fuse.js";
+// TODO: change
+const CHECKLIST_ITEMS = [
+  "An open data bid/ask marketplace",
+  "No middle man fees. Instant delivery of data",
+  "No user accounts or vendor agreements required"
+];
 
 
-export default function Home() {
+export const Home = () => {
   const [loading, setLoading] = useState(false)
-  const [searchValue, setSearchValue] = useState('')
-  const [data, setData] = useState([]);
-  const [page, setPage] = useState(1);
-  const [pageSize, setPageSize] = useState(10);
+  // next router
+  const [error, setError] = useState()
 
-  useEffect(() => {
-    if (!searchValue) {
-      setData(ITEMS)
-      return
-    }
-    const fuse = new Fuse(ITEMS, {
-      keys: ['name', 'description']
-    })
-    const res = fuse.search(searchValue)
-    setData(res.map(r => r.item))
-  }, [searchValue])
-
-  async function get() {
-    setLoading(true)
-    try {
-      const res = await getListings(0, 100)
-      console.log('get listings', res)
-      if (isEmpty(res)) {
-        setData(ITEMS)
-      }
-      // setListings(res)
-    } catch (e) {
-      console.error('error getting listings', e)
-    } finally {
-      setLoading(false)
-    }
-  }
-
-  useEffect(() => {
-    get()
-  }, [page, pageSize])
-
-
-  return (
-    <div className='container'>
-      <div className='centered'>
-        <h1>Search listings</h1>
-        <br />
-        <Search
-          className='search-input'
-          style={{ width: 600 }}
-          placeholder="Search by listing name or description"
-          onSearch={value => setSearchValue(value)} enterButton />
-      </div>
-      {loading && <div>
-        <Spin size='large' />
-      </div>}
-      {!loading && <div className="listing-section">
-        {data.map((listing, i) => {
-          return <ListingCard listing={listing} key={i} />
+  return <div className='home-section'>
+    <Row className='home-section'>
+      <Col span={12}>
+        <div className='prompt-section'>
+          {/* <img src={logo} className='home-logo'/><br/> */}
+          {/* {APP_DESC} */}
+        </div>
+        {CHECKLIST_ITEMS.map((item, i) => {
+          return (
+            <p key={i}>
+              <CheckCircleTwoTone twoToneColor="#00aa00" />
+              &nbsp;
+              {item}
+            </p>
+          );
         })}
-      </div>}
-      <div className='centered'>
-        {!loading && data.length === 0 && <div>
-          No listings found
-        </div>}
-        {data.length > 0 && <div><p className='bold'>Found listings: {data.length}</p></div>}
-        <br />
-        <Pagination
-          current={page}
-          total={data.length}
-          pageSize={pageSize}
-          onChange={(page) => setPage(page)}
-        />
-        <br />
-      </div>
+        <div>
+        </div>
+        <div>
+          <Button className='standard-btn' size="large" type="primary" onClick={() => console.log('/create')}>
+            Create a data listing
+          </Button>
+        </div>
+      </Col>
+      <Col span={12}>
+        {/* <Image width={400} height={400} className='hero-image' src={'https://cdn.dribbble.com/users/869467/screenshots/2662113/media/1c9271b1817ba7a3052ebd3dd20de096.gif'} /> */}
+      </Col>
+    </Row>
 
+  </div>
 
-    </div>
-  )
 }
+
+export default Home

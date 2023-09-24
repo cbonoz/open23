@@ -5,13 +5,13 @@ import { Button, Input, Row, Col, Steps, Result, Divider } from "antd";
 import { listingUrl, ipfsUrl, getExplorerUrl, humanError, } from "../util";
 import { uploadFiles } from "../util/stor";
 import TextArea from "antd/lib/input/TextArea";
-import { ACTIVE_CHAIN, APP_NAME } from "../util/constant";
-import { generateItem } from "../util/constant";
+import { ACTIVE_CHAIN, APP_NAME } from "../constants";
+import { generateItem } from "../constants";
 import { FileDrop } from "./FileDrop";
-import { useWallet } from "../context/wallet";
 import { createListing } from "../util/tableland";
 import { ethers } from "ethers";
 import { deployContract } from "../util/listingContract";
+import { useWallet } from "./WallerProviderWrapper";
 
 const { Step } = Steps;
 

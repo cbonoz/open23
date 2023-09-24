@@ -1,6 +1,6 @@
 import { Database } from "@tableland/sdk";
-import { APP_NAME } from "./constant";
 import { ethers } from "ethers";
+import { APP_NAME } from "../constants";
 
 // Create a database connection; since there is no signer,
 // table reads are possible but creates/writes are not

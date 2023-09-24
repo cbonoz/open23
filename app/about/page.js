@@ -1,6 +1,6 @@
 'use client';
 
-import { APP_NAME } from "../util/constant";
+import { APP_NAME } from "../constants";
 import Image from 'next/image'
 import Button from 'antd/es/button'
 import { setupTables } from "../util/tableland";

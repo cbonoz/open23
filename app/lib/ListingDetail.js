@@ -16,14 +16,14 @@ import {
 } from 'antd';
 import Image from 'next/image'
 import { abbreviate, convertCamelToHuman, formatCurrency, getExplorerUrl, humanError } from '../util';
-import { ACTIVE_CHAIN, EXAMPLE_OFFERS, STAT_KEYS } from '../util/constant';
+import { ACTIVE_CHAIN, EXAMPLE_OFFERS, STAT_KEYS } from '../constants';
 import { LineChart, PieChart, BarChart } from 'react-chartkick'
 
 import { purchaseContract } from '../util/listingContract';
 import { createOffer, getOffersForListing } from '../util/tableland';
+import { useWallet } from './WallerProviderWrapper';
 
 import 'chartkick/chart.js'
-import { useWallet } from '../context/wallet';
 import { ethers } from 'ethers';
 
 
@@ -61,7 +61,7 @@ const ListingDetail = ({ item }) => {
         return <Spin size='large' />
     }
 
-    const createdAddress = item.createdBy.toString()
+    const createdAddress = item?.createdBy?.toString()
     console.log('createdAddress', createdAddress)
 
     async function makePurchase() {
@@ -148,7 +148,7 @@ const ListingDetail = ({ item }) => {
                                 style={{ display: 'inline-block', marginRight: 32 }}
                                 title={"Price "}
                                 valueRender={
-                                    () => <span>{ethers.utils.formatEther(item.price)} {ACTIVE_CHAIN.symbol}</span>
+                                    () => <span>{item.price} {ACTIVE_CHAIN.symbol}</span>
                                 }
                             />
 
@@ -195,7 +195,7 @@ const ListingDetail = ({ item }) => {
                                 <Button
                                     disabled={loading}
                                     onClick={async () => {
-                                        await checkWallet()
+                                        // await checkWallet()
                                         setShowOfferModal(!showOfferModal)
                                     }} type="link">Make an Offer</Button>
                             </section>

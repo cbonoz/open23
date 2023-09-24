@@ -2,8 +2,9 @@
 
 import { Breadcrumb } from "antd"
 import ListingDetail from "../../lib/ListingDetail"
-import { EXAMPLE_ITEM, generateItem } from "../../util/constant"
+import { EXAMPLE_ITEM, generateItem } from "../../constants"
 import React, { useState, useEffect } from "react"
+import { DATASET_MAP } from "../../constants"
 
 
 export default function ListingPage({ params }) {
@@ -16,7 +17,7 @@ export default function ListingPage({ params }) {
     }
 
     useEffect(() => {
-        fetchListing(listingId)
+        fetchListing(DATASET_MAP[listingId])
     }, [listingId])
 
     const breadcrumbs = [

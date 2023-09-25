@@ -8,18 +8,23 @@ contract DataContract {
   uint256 public price;
   string private cid; // TODO: move to private FEVM.
   bool public active;
+  address private adminAddress;
+
+  bool public isValidated;
+
   mapping(address => bool) public hasAccess;
 
-  constructor(string memory _cid, uint256 _price) {
+  constructor(string memory _cid, uint256 _price, address _adminAddress) {
     deployer = msg.sender;
     cid = _cid;
     price = _price;
     active = true;
+    adminAddress = _adminAddress;
   }
 
   function purchaseAccess() public payable returns (string memory) {
     require(active, "Contract was marked inactive by creator");
-    if (price != 0) {
+    if (price != 0 && !hasAccess[msg.sender]) {
       require(msg.value == price, "Incorrect price, please call contract with nonzero value");
       // Transfer to deployer.
       payable(deployer).transfer(msg.value);

@@ -1,4 +1,4 @@
-import { IPFS_BASE_URL, ACTIVE_CHAIN } from '../constants'
+import { IPFS_BASE_URL, ACTIVE_CHAIN, ADMIN_ADDRESS } from '../constants'
 
 export function addMinutes(numOfMinutes, date = new Date()) {
   date.setMinutes(date.getMinutes() + numOfMinutes);
@@ -12,6 +12,10 @@ export const formatDate = (d) => {
     d = d ? new Date(d) : new Date()
   }
   return `${d.toLocaleDateString()} ${d.toLocaleTimeString()}`
+}
+
+export const isAdminAddress = (address) => {
+  return ADMIN_ADDRESS === address;
 }
 
 export const formatCurrency = (amount, symbol) => {

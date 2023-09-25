@@ -1,8 +1,8 @@
 'use client'
 
 import React, { useEffect, useState } from "react";
-import { Button, Input, Row, Col, Steps, Result, Divider } from "antd";
-import { listingUrl, ipfsUrl, getExplorerUrl, humanError, } from "../util";
+import { Button, Input, Row, Col, Steps, Result, Divider, Checkbox, Card, Image } from "antd";
+import { listingUrl, ipfsUrl, getExplorerUrl, humanError, isEmpty, } from "../util";
 import { uploadFiles } from "../util/stor";
 import TextArea from "antd/lib/input/TextArea";
 import { ACTIVE_CHAIN, APP_NAME } from "../constants";
@@ -78,14 +78,16 @@ function CreateListing() {
     try {
       // TODO: add step 1/2 once tableland indexing ready.
       // 1) Create files/metadata to ipfs.
-      let cid = '123';
-      if (files && files.length > 0) {
-        cid = await uploadFiles(
-          files,
-          res
-        );
-      } else {
-        throw new Error("No files found");
+      let cid = data.cid
+      if (!data.useCid) {
+        if (!isEmpty(data.files)) {
+          cid = await uploadFiles(
+            files,
+            res
+          );
+        } else {
+          throw new Error("No files found");
+        }
       }
 
       // 2) deploy contract with initial metadata
@@ -103,6 +105,7 @@ function CreateListing() {
       // 3) create table entry
       const listing = { ...data } // TODO: set all fields.
       listing['address'] = contract.address;
+
       try {
         // const price  = ethers.utils.parseEther(listing.price).toString()
         const listingResult = createListing(listing)
@@ -134,19 +137,31 @@ function CreateListing() {
   return (
     <div>
       <Row>
+        <Col span={24}>
+          <div className="centered standard-margin">
+            <Image src="logo.png" alt="DataX Logo" width={180} height={37} priority />
+            <h3>Create new data listing</h3>
+            <br />
+            <br />
+          </div>
+        </Col>
+      </Row>
+
+      <Row>
+
         <Col span={16}>
+
           <div className="create-form white boxed">
-            {!result && <><h2>Create new data listing</h2>
-              <Divider />
+            {!result && <>
+              <h3 className="vertical-margin">General Information:</h3>
               <a href="#" onClick={e => {
                 e.preventDefault()
                 setDemo()
               }}>Set demo values</a>
-              <br />
-              <br />
+              <Divider />
 
-              <h3 className="vertical-margin">Data Listing information:</h3>
-              <h5>Name</h5>
+
+              <h4>Name</h4>
               <Input
                 placeholder="Name of listing"
                 value={data.name}
@@ -154,7 +169,7 @@ function CreateListing() {
               />
               <br />
               <br />
-              <h5>Description</h5>
+              <h4>Description</h4>
               <TextArea
                 aria-label="Description"
                 onChange={(e) => updateData("description", e.target.value)}
@@ -165,8 +180,8 @@ function CreateListing() {
               <br />
               <br />
 
-     
-              <h5>Price ({ACTIVE_CHAIN.symbol})</h5>
+
+              <h4>Price ({ACTIVE_CHAIN.symbol})</h4>
               <Input
                 placeholder="Purchase price"
                 value={data.price}
@@ -175,7 +190,9 @@ function CreateListing() {
               <br />
               <br />
 
-              <h5>[Optional] Listing image (link)</h5>
+
+
+              <h4>[Optional] Listing image (link)</h4>
               <Input
                 placeholder="Provide a link to an image describing your listing"
                 value={data.image}
@@ -185,7 +202,7 @@ function CreateListing() {
               <br />
 
 
-              <h5>[Optional] Keywords (enter separated by comma)</h5>
+              <h4>[Optional] Keywords (enter separated by comma)</h4>
               <Input
                 placeholder={"Add keywords to help others understand and find your listing"}
                 value={data.tags}
@@ -193,7 +210,7 @@ function CreateListing() {
               />
               <br />
               <br />
-              <h5>Address</h5>
+              <h4>Address</h4>
               <Input
                 placeholder={'Your address'}
                 value={wallet?.address || data.createdby}
@@ -201,23 +218,67 @@ function CreateListing() {
                 onChange={(e) => updateData("createdBy", e.target.value)}
               />
 
-              {/* TODO: add configurable amount of items */}
-              <h3 className="vertical-margin">Upload dataset(s) for purchaseable collection</h3>
-              <FileDrop
-                files={data.files || []}
-                setFiles={(files) => updateData("files", files)}
+              {/* Checkbox for useCid */}
+              <br />
+              <br />
+              <h4>Is this a large dataset (over 5MB) or do you have a CID already?</h4>
+
+              <Checkbox
+                type="checkbox"
+                checked={data.useCid}
+                onChange={(e) => updateData("useCid", e.target.checked)}
               />
 
-              <Button
-                type="primary"
-                className="standard-button"
-                onClick={create}
-                disabled={loading || errMessage}
-                loading={loading}
-                size="large"
-              >
-                Create Listing
-              </Button>
+              <br />
+              <br />
+
+
+              {data.useCid && <>
+
+                <Card title="Provide CID link to dataset">
+                  <br />
+                  <p>Use an existing dataset cid or a <a href="https://lotus.filecoin.io/tutorials/lotus/large-files/" target="_blank">Lotus</a> client to upload an encrypted or unencrypted (less secure) dataset.</p>
+                  <br />
+                  <h4>Dataset CID</h4>
+                  <Input
+                    placeholder="Dataset CID"
+                    value={data.cid}
+                    onChange={(e) => updateData("cid", e.target.value)}
+                  />
+                </Card>
+              </>}
+
+              {!data.useCid && <>
+                <Card title="Upload dataset(s) for purchaseable collection">
+
+                  {/* <h3 className="vertical-margin">Upload dataset(s) for purchaseable collection</h3> */}
+                  <FileDrop
+                    files={data.files || []}
+                    setFiles={(files) => updateData("files", files)}
+                  />
+
+                </Card>
+              </>}
+
+              {/* TODO: add configurable amount of items */}
+
+              <div>
+
+                <Button
+                  type="primary"
+                  className="standard-button"
+                  onClick={create}
+                  disabled={loading || errMessage}
+                  loading={loading}
+                  size="large"
+                >
+                  Create Listing
+                </Button>
+
+                <p>Note listings are considered unverified until confirmed by an admin of {APP_NAME} after posting.
+
+                </p>
+              </div>
               {!error && !result && loading && (
                 <span>&nbsp;Note this may take a few moments.</span>
               )}
@@ -265,19 +326,9 @@ function CreateListing() {
                 description: 'Deploys a smart contract and creates a purchase page for the dataset'
               }, {
                 title: 'Use the generated purchase page to sell your data',
-                description: 'Others can purchase the dataset from this url'
               }]}
               current={getStep()}
             >
-              {/* <Step title="Fill in fields" description="Enter required data." />
-              <Step
-                title={`Create ${APP_NAME} listing`}
-                description="Deploys a smart contract and creates a purchase page for the dataset"
-              />
-              <Step
-                title="Use the generated purchase page to sell your data"
-                description="Others can purchase the dataset from this url"
-              /> */}
             </Steps>
           </div>
         </Col>

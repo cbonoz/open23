@@ -3,7 +3,7 @@
 import { usePathname } from "next/navigation"
 import { useWallet } from "./WallerProviderWrapper"
 import Link from "next/link";
-import { abbreviate } from "../util";
+import { abbreviate, isAdminAddress } from "../util";
 import { APP_NAME } from "../constants";
 import StyledComponentsRegistry from "./AntdRegistry";
 import { Button, Layout, Menu } from "antd";
@@ -32,6 +32,16 @@ function UiLayoutWrapper({ children }) {
             href: '/about',
         },
     ]
+
+    const isAdmin = isAdminAddress(wallet?.address) 
+
+    if (isAdmin) {
+        menuItems.push({
+            key: '/admin',
+            label: <Link href="/admin">Admin</Link>,
+            href: '/admin',
+        })
+    }
 
     return (
         <StyledComponentsRegistry>

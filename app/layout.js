@@ -10,7 +10,7 @@ export default function RootLayout({ children }) {
 
   return (<html>
     <Script async src="https://saturn.tech/widget.js" />
-    <Head>
+    <head>
       <link rel="preload" href="/fonts/AdelleSans-Regular.woff" as="font" crossOrigin="" />
       <link rel="preload" href="/fonts/AdelleSans-Regular.woff2" as="font" crossOrigin="" />
       <link rel="preload" href="/fonts/AdelleSans-Semibold.woff" as="font" crossOrigin="" />
@@ -23,7 +23,7 @@ export default function RootLayout({ children }) {
 
       <title>DataX | Open data collective and marketplace</title>
       <meta name="description" content="Privy Auth Starter" />
-    </Head>
+    </head>
     <body>
       <WalletProviderWrapper>
         <UiLayoutWrapper>

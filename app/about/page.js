@@ -1,12 +1,12 @@
 'use client';
 
-import { APP_NAME } from "../constants";
+import { APP_NAME, EXAMPLE_DATASETS } from "../constants";
 import Image from 'next/image'
 import Button from 'antd/es/button'
 import { setupTables } from "../util/tableland";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { Divider } from "antd";
+import { Card, Divider } from "antd";
 
 
 export default function About() {
@@ -20,7 +20,7 @@ export default function About() {
             <br />
 
             <p>
-            <Image src="logo.png" alt="DataX Logo" width={180} height={37} priority /><br/><br/>
+                <Image src="logo.png" alt="DataX Logo" width={180} height={37} priority /><br /><br />
                 DataX is a bid/ask marketplace for data similar to StockX where users can list data for sale and then people can set their asking price. Built using NextJS, Filecoin FVM, Tableland, Saturn, and web3.storage.
             </p>
 
@@ -34,49 +34,38 @@ export default function About() {
                 Files served from {APP_NAME} are verified and secured with Filecoin Saturn.
             </p>
 
+            <p>Note this is a hackathon prototype and would require additional work. By uploading data you agree that this service is used as-is and that data may be compromised or shared outside the platform.</p>
+
             <p>
                 Follow the guide here to unpack your purchased content.
                 https://web3.storage/docs/how-tos/work-with-car-files/
             </p>
 
-            <Divider />
+
             <p>
 
-                The create tables button will create the tables needed for the app to run. For the hosted deployment, these tables are already created and set in the environment. This is only needed once.<br/>
-                <br/>
-      
-            {/* Create listing */}
-            <Button type="primary" onClick={() => {
-                router.push('/create')
-            }}>Create new listing</Button>&nbsp;
+                {/* Create listing */}
+                <Button type="primary" onClick={() => {
+                    router.push('/create')
+                }}>Create new listing</Button>&nbsp;
 
-            <Button type="secondary" disabled={loading} loading={loading} onClick={async () => {
-                setLoading(true)
-                try {
-                    const res = await setupTables()
-                    setResult(res)
-                } catch (e) {
-                    console.error('error creating tables', e)
-                } finally {
-                    setLoading(false)
-                }
-            }}>Create tables (admin)</Button>
-      </p>
 
-<br />
-<br />
+            </p>
 
-<span>
-</span>
+            <Divider />
 
-            {result && <div>
-                <br />
-                <h2>Created tables: </h2>
-                <br />
-                Listing table: {result.listingTable}<br />
-                Offer table: {result.offerTable}
-            </div>}
+            <Card title="Upload ideas">
 
+
+                {EXAMPLE_DATASETS.map((item, i) => {
+                    return <div key={i}>
+                        <h4>{item.name}</h4>
+                        <p>{item.description}</p>
+                        <p>{item.example}</p>
+                    </div>
+                })}
+
+            </Card>
 
         </div>
     )

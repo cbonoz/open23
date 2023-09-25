@@ -20,6 +20,8 @@ export const EXAMPLE_ITEM = {
     "createdBy": "0xf4982D4aC99d25d89Cc8993a88Dc643832B1515b",
     "createdAt": Date.now(),
     "currency": ACTIVE_CHAIN.symbol,
+    "verified": false,
+    "price": 0.5,
     "size": "10000000",
 }
 
@@ -36,13 +38,11 @@ export const generateItem = (d) => {
     }
 }
 
-
 // export const IPFS_BASE_URL = 'https://ipfs.filebase.io/ipfs'
 // export const IPFS_BASE_URL = 'https://gateway.pinata.cloud/ipfs'
 export const IPFS_BASE_URL = 'https://saturn.ms/ipfs'
 
-
-
+export const ADMIN_ADDRESS = process.env.NEXT_PUBLIC_ADMIN_ADDRESS
 
 export const EXAMPLE_DATASETS = [
     {

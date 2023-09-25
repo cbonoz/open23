@@ -4,18 +4,13 @@
 </p>
 <br/>
 
-DataX
+DataX | A bid/ask marketplace for curated datasets.
 ---
 
-DataX is a bid/ask marketplace for data similar to StockX where users can list data their unique and curated datasets for sale with the ability for public search and potential buyers to set their asking price. 
+DataX is a bid/ask marketplace for data similar to StockX where users can list data their unique and custom datasets for sale with the ability for public search and potential buyers to set their asking price. 
 
 Built using NextJS, Filecoin FVM, Tableland, Dataverse, Saturn, and web3.storage.
 
-Under 5MB can upload directly
-Over 5MB can provide a link to the cid
-DataX will provide instructions for both uploading and accessing files either through the app or a lotus client.
-
-Uploaded Datasets all have a validation flag on them. By default all datasets are marked unvalidated until reviewed by an admin of the app (admins specified on the environment when the app is deployed). Unvalidated datasets can be purchased at buyers discretion.
 
 ## Inspiration
 
@@ -45,15 +40,21 @@ DataX provides a user-friendly interface for listing various types of data sets.
 
 Each uploaded data set gets its own FVM smart contract and unique url identified by the contract address. When a listing visitor purchases a dataset, a transaction is made against the listing contract, a transaction and transfer via the contract is recorded, and lastly Saturn securely delivers the car file representation of the data to the buyer via the cid.
 
+Under 5MB can upload directly
+Over 5MB can provide a link to the cid
+DataX will provide instructions for both uploading and accessing files either through the app or a lotus client.
+
+Uploaded Datasets all have a validation flag on them. By default all datasets are marked unvalidated until reviewed by an admin of the app (admins specified on the environment when the app is deployed). Unvalidated datasets can be purchased at buyers discretion.
 
 
 ### Core functions
 * Create listing
-* Search listings with quick listing filter
+* Search listings
 * Buy listing
+* Validate listing (from admin panel)
 * Make offer
 * See offers
-* View data set access history.
+* View data set purchase history (from blockchain explorer).
 
 
 ## Technologies used
@@ -75,19 +76,31 @@ NextJS: We utilized NextJS to create a responsive and interactive frontend inter
 <!-- Saturn: Data validation (using browser client). https://github.com/filecoin-saturn/browser-client -->
 
 
-## Running the project
+## Running the project (from scratch)
 
 1. Copy `.env.sample` -> `.env`
 
-2. Define the needed env variables.
+2. Define the admin address in `.env`. This will be used to set up the app tables.
 
 3. `yarn; yarn dev`
 
 The app should now be running on port 3000.
 
+4. Go to `localhost:3000/admin`. Connect your wallet using the same address from step 3. 
+
+5. Deploy tables and copy table values to `.env`. Fill in remaining `.env` values.
+
+6. Restart the server and test locally.
+
+7. Do a production build and deployment following the below.
+
+Any repeated starts can be done with `yarn dev` once all variables set.
+
 ### Deployment build
 
-1. `yarn out`
+This command deploys the build site to surge.sh by default, feel free to edit to your desired deployment destination in `package.json`.
+
+`yarn build; yarn deploy`
 
 <!-- ## Challenges we ran into
 
@@ -107,18 +120,3 @@ The app should now be running on port 3000.
 * https://www.encode.club/open-data-hack
 * https://ownershiplabs.notion.site/DataverseOS-Builders-Hackathon-2-0-377b2b3337454311ace6eb82a6ef5472
 * https://docs.tableland.xyz/sdk/database/
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.

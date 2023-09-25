@@ -96,6 +96,10 @@ a {
   font-weight: bold;
 }
 
+.standard-margin {
+  margin-top: 20px;
+}
+
 .dropzone {
   border: 1px dotted black;
   padding: 25px;

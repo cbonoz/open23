@@ -11,6 +11,12 @@ DataX is a bid/ask marketplace for data similar to StockX where users can list d
 
 Built using NextJS, Filecoin FVM, Tableland, Dataverse, Saturn, and web3.storage.
 
+Under 5MB can upload directly
+Over 5MB can provide a link to the cid
+DataX will provide instructions for both uploading and accessing files either through the app or a lotus client.
+
+Uploaded Datasets all have a validation flag on them. By default all datasets are marked unvalidated until reviewed by an admin of the app (admins specified on the environment when the app is deployed). Unvalidated datasets can be purchased at buyers discretion.
+
 ## Inspiration
 
 

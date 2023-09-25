@@ -14,7 +14,7 @@ const CHECKLIST_ITEMS = [
 ];
 
 
-export const Home = () => {
+const Home = () => {
   const [loading, setLoading] = useState(false)
   // next router
   const [error, setError] = useState()

@@ -90,7 +90,7 @@ export function FileDrop({ files, setFiles }) {
     <section>
       <div {...getRootProps({ className: "dropzone" })}>
         <input {...getInputProps()} />
-        <p>Drag 'n' drop some files here, or click to select files</p>
+        <p>Drag &apos;n&apos; drop some files here, or click to select files</p>
       </div>
       <br />
       <b>{files.length === 0 ? 'No files uploaded' : 'Files to upload:'}</b>

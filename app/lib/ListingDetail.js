@@ -5,43 +5,72 @@ import {
     Card,
     Button,
     Statistic,
-    Descriptions,
     Row,
     Col,
-    List,
     Spin,
     Divider,
     Modal,
     Input,
+    Breadcrumb,
+    Result,
 } from 'antd';
 import Image from 'next/image'
-import { abbreviate, convertCamelToHuman, formatCurrency, getExplorerUrl, humanError } from '../util';
-import { ACTIVE_CHAIN, EXAMPLE_OFFERS, STAT_KEYS } from '../constants';
+import { abbreviate, convertCamelToHuman, formatCurrency, formatListing, getExplorerUrl, humanError, isEmpty } from '../util';
+import { ACTIVE_CHAIN, APP_NAME, EXAMPLE_OFFERS, STAT_KEYS } from '../constants';
 import { LineChart, PieChart, BarChart } from 'react-chartkick'
 
 import { purchaseContract } from '../util/listingContract';
-import { createOffer, getOffersForListing } from '../util/tableland';
+import { createOffer, getListing, getOffersForListing } from '../util/tableland';
 import { useWallet } from './WallerProviderWrapper';
-
-import 'chartkick/chart.js'
 import { ethers } from 'ethers';
 
+import 'chartkick/chart.js'
 
 
-const ListingDetail = ({ item }) => {
+const ListingDetail = ({ listingId }) => {
     const [loading, setLoading] = useState(false)
     const [offerData, setOfferData] = useState(EXAMPLE_OFFERS)
     const [showOfferModal, setShowOfferModal] = useState(false)
-    const [amount, setAmount] = useState(1 || item.price)
+    const [error, setError] = useState()
+    const [listing, setListing] = useState()
+    const [amount, setAmount] = useState()
+    console.log('listing', listingId)
 
     const { connect, provider, wallet, logout } = useWallet()
+
+    async function fetchListing(id) {
+        setError()
+        setLoading(true)
+        try {
+            const res = await getListing(id)
+            if (isEmpty(res)) {
+                throw new Error('Listing not found. Do you have a valid listing url?')
+            }
+            const firstResult = res[0]
+            console.log('got listing', firstResult)
+            setListing(firstResult)
+        } catch (e) {
+            console.error('error getting listing', e)
+            setError(e.message)
+        } finally {
+            setLoading(false)
+        }
+    }
+
+
+    useEffect(() => {
+        fetchListing(listingId)
+        // fetchListing(DATASET_MAP[listingId])
+    }, [listingId])
+
+
 
 
     useEffect(() => {
 
         async function fetchOffers(listingId) {
             // try / catch, no loading
-            // setLoading(true)
+            setLoading(true)
             try {
                 const res = await getOffersForListing(listingId)
                 console.log('offers', res)
@@ -49,25 +78,30 @@ const ListingDetail = ({ item }) => {
             } catch (e) {
                 console.error('error getting offers', e)
             } finally {
+                setLoading(false)
             }
         }
-        if (item) {
-            fetchOffers(item.address)
+        if (listingId) {
+            fetchOffers(listingId)
         }
-    }, [item])
+    }, [listingId]);
 
 
-    if (!item) {
-        return <Spin size='large' />
-    }
-
-    const createdAddress = item?.createdBy?.toString()
-    console.log('createdAddress', createdAddress)
+    const breadcrumbs = [
+        {
+            title: 'Listings',
+            href: '/'
+        },
+        {
+            title: listing?.name,
+            href: `/listing/${listingId}`
+        }
+    ]
 
     async function makePurchase() {
         setLoading(true)
         try {
-            const res = await purchaseContract(provider.signer, item.address, item.price)
+            const res = await purchaseContract(provider.signer, listing.address, listing.price)
             console.log('purchase', res)
         } catch (e) {
             console.error('error purchasing', e)
@@ -83,15 +117,16 @@ const ListingDetail = ({ item }) => {
         }
         setLoading(true)
 
-        const offer = {
-            amount,
-            listingId: item.id,
-            createdAt: Date.now(),
-            createdBy: wallet.account,
-            address: item.address
-        }
         try {
-            const res = createOffer(offer)
+
+            const offer = {
+                amount: ethers.utils.parseEther(amount.toString()),
+                listingId: listing.id,
+                createdAt: Date.now(),
+                createdBy: wallet.account,
+                address: listing.address,
+            }
+            const res = await createOffer(offer)
             console.log('make offer', res)
         } catch (e) {
             console.error('error making offer', e)
@@ -102,84 +137,83 @@ const ListingDetail = ({ item }) => {
         }
     }
 
+    if (loading && !error) {
+        return <Spin size='large' />
+    }
+
+
+    if (error || !listing) {
+        return <Result
+            status="warning"
+            title="Error loading listing"
+            subTitle={error || 'Please try another url or return to search'} 
+            extra={[
+                <Button type="primary" key={'search'} onClick={() => window.location.href = '/'}>Return to search</Button>
+            ]}
+            />
+    }
+
+    const formattedListing = formatListing(listing);
+
     return (
         <div className="listing-detail-page">
+            <Breadcrumb items={breadcrumbs} />
+            <br />
             <Card title={<span style={{ color: "green" }}>For Purchase</span>}>
-                <h1>{item.name}</h1>
-                <h3>{item.description}</h3>
+                <h1>{listing.name}</h1>
+                <h3>{listing.description}</h3>
                 <Divider />
                 <Row>
 
-                    <Col span={12}>
+                    <Col span={16}>
                         <section className="product-images">
-                            <Image width={450} height={300} src={item.image} alt={item.name} />
+                            <Image width={450} height={300} src={listing.image} alt={listing.name} />
                             <br />
                             <br />
                         </section>
                         <section className="product-details">
-                            <Statistic
+                            {/* <Statistic
                                 style={{ display: 'inline-block', marginRight: 32 }}
                                 title={"Created by"}
                                 valueRender={() => <a href={getExplorerUrl(createdAddress)} target="_blank">
                                     {abbreviate(createdAddress)}
                                 </a>
                                 }
-                            />
-
-                            <Statistic
-                                style={{ display: 'inline-block', marginRight: 32 }}
-                                title={"Created at"}
-                                valueRender={
-                                    () => <span>{new Date(item.createdAt).toLocaleDateString()}</span>
+                            /> */}
+                            <Card title="Details">
+                                {Object.keys(formattedListing).map((key, i) => {
+                                    if (key === 'image' || key === 'description' || key === 'name') {
+                                        return <></>
+                                    }
+                                    return (<span
+                                        key={i}
+                                    >
+                                        <Statistic
+                                            style={{ display: 'inline-block', marginRight: 32 }}
+                                            title={convertCamelToHuman(key)}
+                                            value={formattedListing[key]} />
+                                    </span>
+                                    )
+                                })}
+                                {
+                                    listing.verified && <p className='success-text'>
+                                        <h3>Verified by {APP_NAME}</h3>
+                                    </p>
                                 }
-                            />
-
-
-                            <Statistic
-                                style={{ display: 'inline-block', marginRight: 32 }}
-                                title={"Purchases"}
-                                valueRender={
-                                    () => <span>{item.purchases}</span>
+                                {
+                                    !listing.verified && <p className='error-text'>
+                                        Listing is not verified, purchase at your own risk.
+                                    </p>
                                 }
-                            />
-
-
-                            <Statistic
-                                style={{ display: 'inline-block', marginRight: 32 }}
-                                title={"Price "}
-                                valueRender={
-                                    () => <span>{item.price} {ACTIVE_CHAIN.symbol}</span>
-                                }
-                            />
-
-                            {item.size && <Statistic
-                                style={{ display: 'inline-block', marginRight: 32 }}
-                                title={"Size"}
-                                valueRender={
-                                    () => <span>{item.size} B</span>
-                                } />}
-
-
-                            {/* 
-                            {STAT_KEYS.map((key, i) => {
-                                return (<span
-                                    key={i}
-                                >
-                                    <Statistic
-                                        style={{ display: 'inline-block', marginRight: 32 }}
-                                        title={convertCamelToHuman(key)}
-                                        value={item[key]} />
-                                </span>
-                                )
-                            })} */}
+                            </Card>
                         </section>
                     </Col>
-                    <Col span={12}>
+                    <Col span={8}>
 
                         <Card title="Purchase">
                             <section className="product-actions">
                                 <p>
-                                    <b>Listing Price: {formatCurrency(item.amount)} </b>
+                                    <b>Listing Price: {formattedListing.price} </b>
                                     <br />
                                 </p>
                                 <p>
@@ -219,16 +253,16 @@ const ListingDetail = ({ item }) => {
 
             {/* TODO: enable offer */}
             <Modal
-                title={item?.name}
+                title={listing?.name}
                 open={showOfferModal}
                 okText="Make offer"
                 onOk={makeOffer}
                 confirmLoading={loading}
                 onCancel={() => setShowOfferModal(false)}
             >
-                {/* <h3>{item?.name}</h3> */}
+                {/* <h3>{listing.name}</h3> */}
                 <h3>Make an offer on this dataset</h3>
-                <p>Listing price: {formatCurrency(item.amount)}</p>
+                <p>Listing price: {formattedListing.price}</p>
                 <Divider />
 
                 <Input
@@ -242,9 +276,7 @@ const ListingDetail = ({ item }) => {
 
             </Modal>
 
-
-        </div>
-    );
+        </div>)
 };
 
 export default ListingDetail;

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useDropzone } from "react-dropzone";
 import { bytesToSize } from "../util";
+import Image from "next/image";
 
 const thumbsContainer = {
   display: "flex",
@@ -62,6 +63,9 @@ export function FileDrop({ files, setFiles }) {
 
   const thumbs = files.map((file) => (
     <div style={thumb} key={file.name}>
+      <span>
+        <Image alt="File preview" src={'https://cdn-icons-png.flaticon.com/512/299/299378.png'} width={32} height={32} />&nbsp;
+      </span>
       <div style={thumbInner}>
         <p>
           <b>{file.name}</b>

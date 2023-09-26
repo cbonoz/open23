@@ -4,7 +4,7 @@ import { usePathname } from "next/navigation"
 import { useWallet } from "./WallerProviderWrapper"
 import Link from "next/link";
 import { abbreviate, isAdminAddress } from "../util";
-import { APP_NAME } from "../constants";
+import { ACTIVE_CHAIN, APP_NAME } from "../constants";
 import StyledComponentsRegistry from "./AntdRegistry";
 import { Button, Layout, Menu } from "antd";
 import { Content, Footer, Header } from "antd/es/layout/layout";
@@ -67,6 +67,9 @@ function UiLayoutWrapper({ children }) {
 
 
                 </Header>
+                    <span className='float-right bold active-network' >
+                Active network: {ACTIVE_CHAIN.name}&nbsp;
+                    </span>
                 <Content className='container'>
                     {/* Pass children to the content area */}
                     <div className='container'>

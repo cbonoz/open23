@@ -43,8 +43,10 @@ function CreateListing() {
       return "Please provide a name, description, price for the item.";
     }
 
-    if (!data.files || (data.files || []).length === 0) {
+    if (!data.useCid && isEmpty(data.files)) {
       return "Must add at least one file";
+    } else if (data.useCid && isEmpty(data.cid)) {
+      return "Must provide a CID for the dataset";
     }
 
     return undefined
@@ -67,6 +69,9 @@ function CreateListing() {
 
     setLoading(true);
     const body = { ...data };
+    if (!isEmpty(body.keywords)) {
+      body['description'] = `${body.description}} | {${body.keywords}}}`
+    }
 
     // Format files for upload.
     const files = (body.files || []).map((x) => {
@@ -205,7 +210,7 @@ function CreateListing() {
               <h4>[Optional] Keywords (enter separated by comma)</h4>
               <Input
                 placeholder={"Add keywords to help others understand and find your listing"}
-                value={data.tags}
+                value={data.keywords}
                 onChange={(e) => updateData("keywords", e.target.value)}
               />
               <br />
@@ -275,20 +280,23 @@ function CreateListing() {
                   Create Listing
                 </Button>
 
-                <p>Note listings are considered unverified until confirmed by an admin of {APP_NAME} after posting.
+                {!error && !result && loading && (
+                <span className="italic">&nbsp;Deploying a listing contract. Confirmation may take a few moments.</span>
+              )}
+                <Divider/>
+
+                <p>Note: Listings are considered unverified until confirmed by an admin of {APP_NAME} after posting.
 
                 </p>
               </div>
-              {!error && !result && loading && (
-                <span>&nbsp;Note this may take a few moments.</span>
-              )}
+      
               <br />
               <br />
             </>}
             {error && <div className="error-text">Error: {error}</div>}
             {result && (<div>
               <Result status="success"
-                title="Listing created!" subTitle="Access your data page and content below" />
+                title="Listing created! Confirm last transaction to index the result" subTitle="Access your data page and content below. It may take a few minutes to confirm the listing on the network." />
               <div>
                 <a href={ipfsUrl(result.cid)} target="_blank">
                   View files

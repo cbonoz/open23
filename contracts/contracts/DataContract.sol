@@ -4,13 +4,11 @@ pragma solidity ^0.8.0;
 
 contract DataContract {
 
-  address public deployer;
-  uint256 public price;
-  string private cid; // TODO: move to private FEVM.
-  bool public active;
-  address private adminAddress;
-
-  bool public isValidated;
+  address public deployer; // deployer/owner of the contract
+  uint256 public price; // list price
+  string private cid; // either encrypted cid or customer encrypts data for security.
+  bool public active; // if false, contract is inactive and no one can purchase access.
+  address private adminAddress;  // address of admin who can validate the data.
 
   mapping(address => bool) public hasAccess;
 
@@ -22,12 +20,15 @@ contract DataContract {
     adminAddress = _adminAddress;
   }
 
+  event PurchaseEvent(address indexed _buyer, uint256 _price);
+
   function purchaseAccess() public payable returns (string memory) {
     require(active, "Contract was marked inactive by creator");
     if (price != 0 && !hasAccess[msg.sender]) {
       require(msg.value == price, "Incorrect price, please call contract with nonzero value");
-      // Transfer to deployer.
+      // Transfer fee to deployer.
       payable(deployer).transfer(msg.value);
+      emit PurchaseEvent(msg.sender, price);
     }
     hasAccess[msg.sender] = true;
     return cid;
@@ -38,8 +39,8 @@ contract DataContract {
         return price;
     }
 
-  function getCid(address _address) public view returns (string memory) {
-    require(hasAccess[_address], "Call purchaseAccess to get cid");
+  function getCid() public view returns (string memory) {
+    require(hasAccess[msg.sender], "Call purchaseAccess to get cid");
     return cid;
   }
 

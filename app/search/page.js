@@ -6,7 +6,7 @@ import ListingCard from '../lib/ListingCard'
 import { EXAMPLE_ITEM, generateItem } from '../constants'
 import { Pagination, Spin } from 'antd'
 import { getListings } from '../util/tableland'
-import { isEmpty } from '../util'
+import { formatListing, isEmpty } from '../util'
 
 
 import Fuse from "fuse.js";
@@ -17,29 +17,33 @@ export default function Home() {
   const [loading, setLoading] = useState(false)
   const [searchValue, setSearchValue] = useState('')
   const [data, setData] = useState([]);
+  const [filteredData, setFilteredData] = useState([]);
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
 
   useEffect(() => {
-    if (!searchValue) {
-      setData(DATASET_ITEMS)
+    if (isEmpty(searchValue)) {
+      setFilteredData([])
       return
     }
-    const fuse = new Fuse(ITEMS, {
+    const fuse = new Fuse(data, {
       keys: ['name', 'description']
     })
     const res = fuse.search(searchValue)
-    setData(res.map(r => r.item))
-  }, [searchValue])
+    setFilteredData(res.map(r => r.item))
+  }, [searchValue, data])
 
   async function get() {
     setLoading(true)
     try {
       const res = await getListings(0, 100)
-      console.log('get listings', res)
-      if (isEmpty(res)) {
-        setData(ITEMS)
-      }
+      const formatted = res.map(formatListing)
+      console.log('get listings', formatted)
+      // if (isEmpty(res)) {
+      //   setData(ITEMS)
+      // } else {
+      setData(formatted)
+      // }
       // setListings(res)
     } catch (e) {
       console.error('error getting listings', e)
@@ -52,6 +56,7 @@ export default function Home() {
     get()
   }, [page, pageSize])
 
+  const filteredItems = searchValue ? filteredData : data;
 
   return (
     <div className='container'>
@@ -80,7 +85,7 @@ export default function Home() {
         <br />
         <Pagination
           current={page}
-          total={data.length}
+          total={filteredItems.length}
           pageSize={pageSize}
           onChange={(page) => setPage(page)}
         />

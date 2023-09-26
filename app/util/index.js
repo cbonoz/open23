@@ -1,4 +1,5 @@
 import { IPFS_BASE_URL, ACTIVE_CHAIN, ADMIN_ADDRESS } from '../constants'
+import { ethers } from 'ethers'
 
 export function addMinutes(numOfMinutes, date = new Date()) {
   date.setMinutes(date.getMinutes() + numOfMinutes);
@@ -48,7 +49,7 @@ export const convertCamelToHuman = (str) => {
     .replace(/([A-Z])/g, " $1")
     .replace(/^./, function (str) {
       return str.toUpperCase();
-    });
+    }).replace(/_/g, ' ');
 }
 
 export function capitalize(string) {
@@ -85,10 +86,22 @@ export const humanError = message => {
   return message
 }
 
-
 export function bytesToSize(bytes) {
   var sizes = ["Bytes", "KB", "MB", "GB", "TB"];
   if (bytes == 0) return "0 Byte";
   var i = parseInt(Math.floor(Math.log(bytes) / Math.log(1024)));
   return Math.round(bytes / Math.pow(1024, i), 2) + " " + sizes[i];
+}
+
+export const formatListing = (listing) => {
+  if (!listing) return {}
+  return {
+    ...listing,
+    // shortAddress: abbreviate(listing.address),
+    created_by: abbreviate(listing.created_by),
+    created_at: formatDate(listing.created_at),
+    price: formatCurrency(ethers.utils.formatEther(listing.price + ""), ACTIVE_CHAIN.symbol),
+    verified: listing.verified ? 'Verified' : 'Unverified',
+
+  }
 }

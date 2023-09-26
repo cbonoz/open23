@@ -270,6 +270,9 @@ textarea {
   cursor: pointer;
 }
 
+.active-network {
+  margin-right: 20px;
+}
 
 .standard-btn {
   padding: 10px;
@@ -281,6 +284,19 @@ textarea {
   font-size: 32px;
   margin-right: 24px;
   margin-bottom: 25px;
+}
+
+.bold {
+  font-weight: bold;
+}
+
+.italic {
+  font-style: italic;
+}
+
+.float-right {
+  float: right;
+  text-align: end;
 }
 
 

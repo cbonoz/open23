@@ -1,5 +1,6 @@
 import { ethers } from "ethers";
 import { DATA_CONTRACT} from "./metadata";
+import { ADMIN_ADDRESS } from "../constants";
 
 export async function deployContract(signer, cid, price) {
     // Deploy contract with ethers
@@ -8,7 +9,7 @@ export async function deployContract(signer, cid, price) {
         DATA_CONTRACT.bytecode,
         signer
     );
-    const contract = await factory.deploy(cid, price);
+    const contract = await factory.deploy(cid, price, ADMIN_ADDRESS); // must match contract.
     // log
     console.log("Deploying contract...", cid, price);
     await contract.deployed();

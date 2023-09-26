@@ -3,6 +3,7 @@
 import { Button, Divider, Input } from "antd";
 import { useState } from "react";
 import { APP_NAME } from "../constants";
+import { setupTables } from "../util/tableland";
 
 export default function Admin() {
 
@@ -16,6 +17,7 @@ export default function Admin() {
         if (!listingId) {
             return
         }
+        setError()
         setLoading(true)
         try {
             const res = await validateListing(listingId)
@@ -44,6 +46,7 @@ export default function Admin() {
 
         <Button className="standard-btn" type="primary" disabled={loading} loading={loading} onClick={async () => {
             setLoading(true)
+            setError()
             try {
                 const res = await setupTables()
                 setTableResult(res)
@@ -53,7 +56,7 @@ export default function Admin() {
             } finally {
                 setLoading(false)
             }
-        }}>Create tables (admin)</Button>
+        }}>Create app tables</Button>
 
 
         {tableResult && <div>

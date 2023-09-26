@@ -18,7 +18,7 @@ export const setupTables = async () => {
     const offerTableName = `${prefix}_offers`
 
     const { meta: createListing } = await db
-        .prepare(`CREATE TABLE ${listingTableName} (id integer primary key, name text, created_by text, 
+        .prepare(`CREATE TABLE ${listingTableName} (id integer primary key, verified integer, name text, created_by text, 
             created_at integer, image text, description text, purchases integer, price integer, address text);`)
         .run();
 
@@ -38,10 +38,29 @@ export const getListings = async (offset, limit) => {
     return results;
 }
 
+export const getListing = async (listingId) => {
+    const { results } = await db.prepare(`SELECT * FROM ${LISTING_TABLE} where address='${encodeURIComponent(listingId)}'`).all();
+    return results;
+}
+
+export const addPurchase = async (listingId) => {
+    const { meta: update } = await db.prepare(`update ${LISTING_TABLE} set purchases=purchases+1 where address=?;`)
+        .bind(listingId)
+        .run();
+    return await update.txn.wait();
+}
+
+export const verifyListing = async (listingId) => {
+    const { meta: update } = await db.prepare(`update ${LISTING_TABLE} set verified=1 where address=?;`)
+        .bind(listingId)
+        .run();
+    return await update.txn.wait();
+}
+
 export const createListing = async (listing) => {
     const priceWei = ethers.utils.parseEther(listing.price.toString()).toString()
     console.log('create', listing, priceWei)
-    const { meta: insert } = await db.prepare(`insert into ${LISTING_TABLE} (name, created_by, created_at, image, description, purchases, price, address) values (?, ?, ?, ?, ?, ?, ?, ?);`)
+    const { meta: insert } = await db.prepare(`insert into ${LISTING_TABLE} (name, verified, created_by, created_at, image, description, purchases, price, address) values (?, 0, ?, ?, ?, ?, ?, ?, ?);`)
         .bind(listing.name, listing.createdBy, listing.createdAt, listing.image, listing.description, listing.purchases, priceWei, listing.address)
         .run();
     console.log('created', insert);

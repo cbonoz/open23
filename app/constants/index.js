@@ -15,7 +15,7 @@ export const EXAMPLE_ITEM = {
     "name": "Oil price data set",
     "image": "https://i.ibb.co/6YfmGCS/oilprices.png",
     "description": "The data contains Weekly crude oil prices from 5/1987 to 9/2023",
-    "tags": ["oil", "price", "energy"],
+    "keywords": ["oil", "price", "energy"],
     "purchases": 0,
     "createdBy": "0xf4982D4aC99d25d89Cc8993a88Dc643832B1515b",
     "createdAt": Date.now(),
@@ -29,9 +29,9 @@ export const EXAMPLE_OFFERS = [
     ["2023-05-13", 2], ["2023-05-14", 5]
 ]
 
-export const generateItem = (d) => {
+export const generateItem = () => {
     return {
-        ...d,
+        ...EXAMPLE_ITEM,
         id: Math.round(Math.random() * 100000000),
         createdAt: Date.now(), // timestamp
         price: Math.round(Math.random() * 10) / 10

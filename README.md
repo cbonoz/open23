@@ -1,6 +1,6 @@
 <br/>
 <p align='center'>
-    <img src='./public/logo.png' width=600 />
+    <img src='./public/logo.png' width=400 />
 </p>
 <br/>
 
@@ -80,13 +80,11 @@ NextJS: We utilized NextJS to create a responsive and interactive frontend inter
 
 1. Copy `.env.sample` -> `.env`
 
-2. Define the admin address in `.env`. This will be used to set up the app tables.
+2. Define the `NEXT_PUBLIC_ADMIN_ADDRESS` to your desired management address in `.env`. This account will be used to set up the app tables and verify submitted listings.
 
-3. `yarn; yarn dev`
+3. `yarn; yarn dev`. The app should now be running on port 3000.
 
-The app should now be running on port 3000.
-
-4. Go to `localhost:3000/admin`. Connect your wallet using the same address from step 3. 
+4. Go to `localhost:3000/admin`. Connect your wallet using the same address from step 3. Note other pages will not be functional yet.
 
 5. Deploy tables and copy table values to `.env`. Fill in remaining `.env` values.
 

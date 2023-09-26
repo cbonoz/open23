@@ -11,7 +11,7 @@ import { FileDrop } from "./FileDrop";
 import { createListing } from "../util/tableland";
 import { ethers } from "ethers";
 import { deployContract } from "../util/listingContract";
-import { useWallet } from "./WallerProviderWrapper";
+import { useWallet } from "./WalletProviderWrapper";
 
 const { Step } = Steps;
 
@@ -144,7 +144,7 @@ function CreateListing() {
       <Row>
         <Col span={24}>
           <div className="centered standard-margin">
-            <Image src="logo.png" alt="DataX Logo" width={180} height={37} priority />
+            <Image src="logo.png" alt="DataX Logo" width={180} height={37} />
             <h3>Create new data listing</h3>
             <br />
             <br />
@@ -285,7 +285,7 @@ function CreateListing() {
               )}
                 <Divider/>
 
-                <p>Note: Listings are considered unverified until confirmed by an admin of {APP_NAME} after posting.
+                <p className="bold">Note: Listings are considered unverified until confirmed by an admin of {APP_NAME} after posting.
 
                 </p>
               </div>
@@ -299,8 +299,9 @@ function CreateListing() {
                 title="Listing created! Confirm last transaction to index the result" subTitle="Access your data page and content below. It may take a few minutes to confirm the listing on the network." />
               <div>
                 <a href={ipfsUrl(result.cid)} target="_blank">
-                  View files
+                  Download files
                 </a>
+                 {/* (download secure <a href="https://spec.filecoin.io/systems/filecoin_files/piece/#:~:text=In%20order%20to%20make%20a,un%2DCAR'ed%20constructions." target="_blank">.car</a> format) */}
                 <br />
                 <a href={result.contractUrl} target="_blank">
                   View created contract
@@ -311,8 +312,8 @@ function CreateListing() {
                   Share or post this page with potential buyers:
                   <br />
                   <a href={result.listingUrl} target="_blank">
-                    View listing page
-                  </a>
+                    View listing page 
+                  </a> (takes at least {ACTIVE_CHAIN.blockTimeSeconds} seconds to confirm)
                 </p>
               </div>
             </div>

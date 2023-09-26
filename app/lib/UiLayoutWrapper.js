@@ -1,7 +1,7 @@
 'use client';
 
 import { usePathname } from "next/navigation"
-import { useWallet } from "./WallerProviderWrapper"
+import { useWallet } from "./WalletProviderWrapper"
 import Link from "next/link";
 import { abbreviate, isAdminAddress } from "../util";
 import { ACTIVE_CHAIN, APP_NAME } from "../constants";
@@ -55,7 +55,7 @@ function UiLayoutWrapper({ children }) {
                             window.location.href = '/'
                         }}
                         width={160}
-                        priority />
+                        />
 
                     <Menu style={{ minWidth: '800px' }}
                         mode="horizontal" defaultSelectedKeys={pathname} items={menuItems} />

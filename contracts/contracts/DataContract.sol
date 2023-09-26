@@ -1,14 +1,15 @@
-pragma solidity ^0.8.0;
+pragma solidity ^0.8.21;
 // License
 // SPDX-License-Identifier: MIT
 
 contract DataContract {
 
   address public deployer; // deployer/owner of the contract
-  uint256 public price; // list price
+  uint256 public price; // initial list price
   string private cid; // either encrypted cid or customer encrypts data for security.
   bool public active; // if false, contract is inactive and no one can purchase access.
   address private adminAddress;  // address of admin who can validate the data.
+  uint256 public totalPurchases; // total number of purchases
 
   mapping(address => bool) public hasAccess;
 
@@ -18,6 +19,7 @@ contract DataContract {
     price = _price;
     active = true;
     adminAddress = _adminAddress;
+    totalPurchases = 0;
   }
 
   event PurchaseEvent(address indexed _buyer, uint256 _price);
@@ -29,19 +31,14 @@ contract DataContract {
       // Transfer fee to deployer.
       payable(deployer).transfer(msg.value);
       emit PurchaseEvent(msg.sender, price);
+      totalPurchases += 1;
     }
     hasAccess[msg.sender] = true;
     return cid;
   }
 
-  // get price
-    function getPrice() public view returns (uint256) {
-        return price;
-    }
-
-  function getCid() public view returns (string memory) {
-    require(hasAccess[msg.sender], "Call purchaseAccess to get cid");
-    return cid;
+  function getMetadata() public view returns (string memory, uint256, bool, uint256) {
+    return (hasAccess[msg.sender] ? cid : "", price, active, totalPurchases);
   }
 
   function changePrice(uint256 _newPrice) public {

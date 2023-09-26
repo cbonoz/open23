@@ -21,14 +21,14 @@ import { LineChart, PieChart, BarChart } from 'react-chartkick'
 
 import { purchaseContract } from '../util/listingContract';
 import { createOffer, getListing, getOffersForListing } from '../util/tableland';
-import { useWallet } from './WallerProviderWrapper';
+import { useWallet } from './WalletProviderWrapper';
 import { ethers } from 'ethers';
 
 import 'chartkick/chart.js'
 
 
 const ListingDetail = ({ listingId }) => {
-    const [loading, setLoading] = useState(false)
+    const [loading, setLoading] = useState(true)
     const [offerData, setOfferData] = useState(EXAMPLE_OFFERS)
     const [showOfferModal, setShowOfferModal] = useState(false)
     const [result, setResult] = useState()
@@ -91,7 +91,7 @@ const ListingDetail = ({ listingId }) => {
     const breadcrumbs = [
         {
             title: 'Listings',
-            href: '/'
+            href: '/search'
         },
         {
             title: listing?.name,
@@ -146,10 +146,9 @@ const ListingDetail = ({ listingId }) => {
         }
     }
 
-    if (loading && !error) {
+    if (loading) {
         return <Spin size='large' />
     }
-
 
     if (error || !listing) {
         return <Result

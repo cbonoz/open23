@@ -2,8 +2,8 @@
 
 import { Button, Divider, Input } from "antd";
 import { useState } from "react";
-import { APP_NAME } from "../constants";
-import { setupTables } from "../util/tableland";
+import { APP_NAME, OFFER_TABLE, LISTING_TABLE } from "../constants";
+import { grantAccess, setupTables } from "../util/tableland";
 
 export default function Admin() {
 
@@ -12,6 +12,18 @@ export default function Admin() {
     const [verifyResult, setVerifyResult] = useState()
     const [error, setError] = useState()
     const [listingId, setListingId] = useState()
+
+    async function grant() {
+        setError()
+        setLoading(true)
+        try {
+            const res = await grantAccess([OFFER_TABLE, LISTING_TABLE])
+            console.log('grant', res)
+        } catch (e) {
+            setError(e.message)
+        }
+        setLoading(false)
+    }
 
     async function validateListing() {
         if (!listingId) {
@@ -78,16 +90,28 @@ export default function Admin() {
             }}
             value={listingId} />
 
-            <br/>
+        <br />
 
         <Button type="primary" disabled={loading} loading={loading} onClick={validateListing} className="standard-btn">Validate listing</Button>
 
         {verifyResult && <div className="success-text">
             Listing verified
             {JSON.stringify(verifyResult)}
+        </div>}
 
+        <Divider />
+
+        {LISTING_TABLE && <div>
+
+
+            <h3>Grant access</h3>
+
+            <p>Grant access to a user to create listings.</p>
+
+            <Button type="primary" disabled={loading} loading={loading} onClick={grant} className="standard-btn">Grant access</Button>
         </div>
         }
+
 
 
 

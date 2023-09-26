@@ -4,10 +4,7 @@ import { APP_NAME } from "../constants";
 
 // Create a database connection; since there is no signer,
 // table reads are possible but creates/writes are not
-const LISTING_TABLE = process.env.NEXT_PUBLIC_LISTING_TABLE;
-const OFFER_TABLE = process.env.NEXT_PUBLIC_OFFER_TABLE;
-
-const db = new Database({autoWait: false});
+const db = new Database({ autoWait: false });
 
 // This is the table's `prefix`--a custom table value prefixed as part of the table's name
 

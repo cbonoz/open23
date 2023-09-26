@@ -20,7 +20,7 @@ export default function About() {
             <br />
 
             <p>
-                <Image src="logo.png" alt="DataX Logo" width={180} height={37} priority /><br /><br />
+                <Image src="logo.png" alt="DataX Logo" width={180} height={37} /><br /><br />
                 DataX is a bid/ask marketplace for data similar to StockX where users can list data for sale and then people can set their asking price. Built using NextJS, Filecoin FVM, Tableland, Saturn, and web3.storage.
             </p>
 

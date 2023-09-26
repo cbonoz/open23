@@ -2,7 +2,7 @@ import Head from 'next/head';
 import Script from 'next/script';
 import UiLayoutWrapper from './lib/UiLayoutWrapper';
 
-import { WalletProviderWrapper } from './lib/WallerProviderWrapper';
+import { WalletProviderWrapper } from './lib/WalletProviderWrapper';
 
 import './globals.css';
 

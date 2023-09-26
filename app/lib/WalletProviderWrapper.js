@@ -8,10 +8,8 @@ import {
 } from "@dataverse/dataverse-connector";
 
 /**
- * Initialize the Dataverse Connector
+ * Initialize the Dataverse Connector context.
  */
-
-
 export const WalletContext = createContext({})
 
 export const WalletProviderWrapper = ({ children }) => {
@@ -31,7 +29,12 @@ export const WalletProviderWrapper = ({ children }) => {
     }
 
     const logout = async () => {
-        // await dataverseConnector.disconnectWallet();
+        try {
+            await dataverseConnector.disconnectWallet();
+        } catch (e) {
+            // may be already logged in or cache issue.
+            console.error('error logging out', e);
+        }
         setWallet(null)
     }
 

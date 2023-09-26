@@ -5,9 +5,13 @@ export const ACTIVE_CHAIN = {
     id: 314159,
     name: 'Filecoin Calibration',
     symbol: 'tFIL',
+    blockTimeSeconds: 30,
     rpc: 'https://calibration.node.glif.io/',
     explorerUrl: 'https://calibration.filscan.io/',
 }
+
+export const LISTING_TABLE = process.env.NEXT_PUBLIC_LISTING_TABLE;
+export const OFFER_TABLE = process.env.NEXT_PUBLIC_OFFER_TABLE;
 
 export const EXAMPLE_ITEM = {
     "id": 1,

@@ -15,7 +15,7 @@ import {
     Result,
 } from 'antd';
 import Image from 'next/image'
-import { abbreviate, convertCamelToHuman, formatCurrency, formatListing, getExplorerUrl, humanError, isEmpty } from '../util';
+import { abbreviate, convertCamelToHuman, formatCurrency, formatListing, getExplorerUrl, humanError, ipfsUrl, isEmpty } from '../util';
 import { ACTIVE_CHAIN, APP_NAME, EXAMPLE_OFFERS, STAT_KEYS } from '../constants';
 import { LineChart, PieChart, BarChart } from 'react-chartkick'
 
@@ -31,6 +31,7 @@ const ListingDetail = ({ listingId }) => {
     const [loading, setLoading] = useState(false)
     const [offerData, setOfferData] = useState(EXAMPLE_OFFERS)
     const [showOfferModal, setShowOfferModal] = useState(false)
+    const [result, setResult] = useState()
     const [error, setError] = useState()
     const [listing, setListing] = useState()
     const [amount, setAmount] = useState()
@@ -101,8 +102,9 @@ const ListingDetail = ({ listingId }) => {
     async function makePurchase() {
         setLoading(true)
         try {
-            const res = await purchaseContract(provider.signer, listing.address, listing.price)
+            const res = await purchaseContract(provider.signer, listing.address, listing.price.toString())
             console.log('purchase', res)
+            setResult(res)
         } catch (e) {
             console.error('error purchasing', e)
             alert('Error purchasing: ' + humanError(e));
@@ -111,8 +113,14 @@ const ListingDetail = ({ listingId }) => {
         }
     }
     async function makeOffer() {
+        setResult()
         if (!amount || amount <= 0) {
-            alert('Please enter an offer more than 0' + ACTIVE_CHAIN.symbol)
+            alert('Please enter an offer more than ' + formatCurrency(0));
+            return
+        }
+
+        if (amount >= parseFloat(formattedListing.price.split(' ')[0])) {
+            alert('Please enter an offer less than the listing price: ' + formattedListing.price)
             return
         }
         setLoading(true)
@@ -123,11 +131,12 @@ const ListingDetail = ({ listingId }) => {
                 amount: ethers.utils.parseEther(amount.toString()),
                 listingId: listing.id,
                 createdAt: Date.now(),
-                createdBy: wallet.account,
+                createdBy: wallet.address,
                 address: listing.address,
             }
             const res = await createOffer(offer)
             console.log('make offer', res)
+            setResult()
         } catch (e) {
             console.error('error making offer', e)
         } finally {
@@ -146,11 +155,11 @@ const ListingDetail = ({ listingId }) => {
         return <Result
             status="warning"
             title="Error loading listing"
-            subTitle={error || 'Please try another url or return to search'} 
+            subTitle={error || 'Please try another url or return to search'}
             extra={[
                 <Button type="primary" key={'search'} onClick={() => window.location.href = '/'}>Return to search</Button>
             ]}
-            />
+        />
     }
 
     const formattedListing = formatListing(listing);
@@ -182,8 +191,8 @@ const ListingDetail = ({ listingId }) => {
                             /> */}
                             <Card title="Details">
                                 {Object.keys(formattedListing).map((key, i) => {
-                                    if (key === 'image' || key === 'description' || key === 'name') {
-                                        return <></>
+                                    if (key === 'image' || key === 'description' || key === 'name' || isEmpty(key)) {
+                                        return
                                     }
                                     return (<span
                                         key={i}
@@ -202,7 +211,7 @@ const ListingDetail = ({ listingId }) => {
                                 }
                                 {
                                     !listing.verified && <p className='error-text'>
-                                        Listing is not verified, purchase at your own risk.
+                                        Listing not yet verified, purchase at your own risk.
                                     </p>
                                 }
                             </Card>
@@ -226,12 +235,20 @@ const ListingDetail = ({ listingId }) => {
                                     onClick={makePurchase}
                                     type="primary">{wallet ? 'Buy Now' : 'Connect Wallet'}</Button>&nbsp;
                                 {/* <Button type="default">Add to Cart</Button> */}
-                                <Button
+                                {wallet?.address && <Button
                                     disabled={loading}
                                     onClick={async () => {
                                         // await checkWallet()
                                         setShowOfferModal(!showOfferModal)
-                                    }} type="link">Make an Offer</Button>
+                                    }} type="link">Make an Offer</Button>}
+
+
+                                {result && <div>
+                                    <p className='success-text'>Thanks for your purchase</p>
+                                    {/* Get cid */}
+                                    <a href={ipfsUrl(result.cid)} target="_blank">View on {ACTIVE_CHAIN.name}</a>
+                                </div>
+                                }
                             </section>
                         </Card>
                     </Col>

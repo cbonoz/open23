@@ -28,5 +28,6 @@ export async function purchaseContract(signer, contractAddress, price) {
     const tx = await contract.purchaseAccess({ value: price });
     await tx.wait();
     console.log("Purchased contract...", tx);
-    return tx;
+    const result = await contract.purchaseAccess.call();
+    return {cid: result};
 }

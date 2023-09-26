@@ -25,7 +25,7 @@ export const formatCurrency = (amount, symbol) => {
   } else if (!amount) {
     return ''
   }
-  return `${amount} ${ACTIVE_CHAIN.symbol}`
+  return `${amount} ${symbol || ACTIVE_CHAIN.symbol}`
 }
 
 export const ipfsUrl = (cid, fileName) => {

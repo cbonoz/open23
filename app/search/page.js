@@ -14,7 +14,7 @@ import { DATASET_ITEMS, EXAMPLE_DATASETS } from '../constants'
 
 
 export default function Home() {
-  const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState(true)
   const [searchValue, setSearchValue] = useState('')
   const [data, setData] = useState([]);
   const [filteredData, setFilteredData] = useState([]);
@@ -78,7 +78,7 @@ export default function Home() {
         })}
       </div>}
       <div className='centered'>
-        {!loading && data.length === 0 && <div>
+        {!loading && isEmpty(data) && <div>
           No listings found
         </div>}
         {data.length > 0 && <div><p className='bold'>Found listings: {data.length}</p></div>}

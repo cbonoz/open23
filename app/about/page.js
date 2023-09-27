@@ -3,7 +3,6 @@
 import { APP_NAME, EXAMPLE_DATASETS } from "../constants";
 import Image from 'next/image'
 import Button from 'antd/es/button'
-import { setupTables } from "../util/tableland";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { Card, Divider } from "antd";
@@ -34,7 +33,7 @@ export default function About() {
                 Files served from {APP_NAME} are verified and secured with Filecoin Saturn.
             </p>
 
-            <p>Note this is a hackathon prototype and would require additional work. By uploading data you agree that this service is used as-is and that data may be compromised or shared outside the platform.</p>
+            <p>Note this is a hackathon prototype and would require additional work to be mainnet ready. By uploading data you agree that this service is used as-is and that data may be compromised or shared outside the platform.</p>
 
             <p>
                 Follow the guide here to unpack your purchased content.

@@ -19,8 +19,8 @@ import { abbreviate, convertCamelToHuman, formatCurrency, formatListing, getExpl
 import { ACTIVE_CHAIN, APP_NAME, EXAMPLE_OFFERS, STAT_KEYS } from '../constants';
 import { LineChart, PieChart, BarChart } from 'react-chartkick'
 
-import { purchaseContract } from '../util/listingContract';
-import { createOffer, getListing, getOffersForListing } from '../util/tableland';
+import { getMetadata, purchaseContract } from '../util/listingContract';
+import { addPurchase, createOffer, getListing, getOffersForListing } from '../util/tableland';
 import { useWallet } from './WalletProviderWrapper';
 import { ethers } from 'ethers';
 
@@ -50,6 +50,8 @@ const ListingDetail = ({ listingId }) => {
             const firstResult = res[0]
             console.log('got listing', firstResult)
             setListing(firstResult)
+
+
         } catch (e) {
             console.error('error getting listing', e)
             setError(e.message)
@@ -61,11 +63,28 @@ const ListingDetail = ({ listingId }) => {
 
     useEffect(() => {
         fetchListing(listingId)
+
         // fetchListing(DATASET_MAP[listingId])
     }, [listingId])
 
+    async function getMeta(signer) {
+        try {
+            const metadata = await getMetadata(signer, listingId)
+            console.log('metadata', metadata)
+            setResult({
+                cid: metadata[0],
+                totalPurchases: metadata[3],
+            })
+        } catch (e) {
+            console.log('error getting metadata', e)
+        }
+    }
 
-
+    useEffect(() => {
+        if (provider) {
+            getMeta(provider.signer)
+        }
+    }, [provider, listingId])
 
     useEffect(() => {
 
@@ -105,6 +124,11 @@ const ListingDetail = ({ listingId }) => {
             const res = await purchaseContract(provider.signer, listing.address, listing.price.toString())
             console.log('purchase', res)
             setResult(res)
+            try {
+                addPurchase(provider.signer, listing.address)
+            } catch (e) {
+
+            }
         } catch (e) {
             console.error('error purchasing', e)
             alert('Error purchasing: ' + humanError(e));
@@ -134,7 +158,7 @@ const ListingDetail = ({ listingId }) => {
                 createdBy: wallet.address,
                 address: listing.address,
             }
-            const res = await createOffer(offer)
+            const res = await createOffer(provider.signer, offer)
             console.log('make offer', res)
             setResult()
         } catch (e) {
@@ -162,6 +186,7 @@ const ListingDetail = ({ listingId }) => {
     }
 
     const formattedListing = formatListing(listing);
+    const hasCid = !isEmpty(result?.cid)
 
     return (
         <div className="listing-detail-page">
@@ -230,22 +255,28 @@ const ListingDetail = ({ listingId }) => {
                                 <br />
                                 <Button
                                     loading={loading}
-                                    disabled={!wallet || loading}
+                                    disabled={!wallet || loading || hasCid}
                                     onClick={makePurchase}
                                     type="primary">{wallet ? 'Buy Now' : 'Connect Wallet'}</Button>&nbsp;
                                 {/* <Button type="default">Add to Cart</Button> */}
                                 {wallet?.address && <Button
-                                    disabled={loading}
+                                    disabled={loading || hasCid}
                                     onClick={async () => {
                                         // await checkWallet()
                                         setShowOfferModal(!showOfferModal)
                                     }} type="link">Make an Offer</Button>}
 
 
-                                {result && <div>
-                                    <p className='success-text'>Thanks for your purchase</p>
+                                {hasCid && <div>
+                                    <Divider />
+                                    <p className='success-text'>You have purchased this dataset!</p>
                                     {/* Get cid */}
-                                    <a href={ipfsUrl(result.cid)} target="_blank">View on {ACTIVE_CHAIN.name}</a>
+                                    <b>
+                                        <a href={ipfsUrl(result.cid)} target="_blank">Download again</a>
+                                    </b>
+
+                                    <br />
+                                    <a href="https://github.com/filecoin-project/lassie#extracting-content-from-a-car" target="_blank">How to extract</a>
                                 </div>
                                 }
                             </section>

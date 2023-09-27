@@ -3,7 +3,8 @@
 import { Button, Divider, Input } from "antd";
 import { useState } from "react";
 import { APP_NAME, OFFER_TABLE, LISTING_TABLE } from "../constants";
-import { grantAccess, setupTables } from "../util/tableland";
+import { grantAccess, setupTables, verifyListing } from "../util/tableland";
+import { useWallet } from "../lib/WalletProviderWrapper";
 
 export default function Admin() {
 
@@ -12,6 +13,7 @@ export default function Admin() {
     const [verifyResult, setVerifyResult] = useState()
     const [error, setError] = useState()
     const [listingId, setListingId] = useState()
+    const { provider } = useWallet()
 
     async function grant() {
         setError()
@@ -32,7 +34,7 @@ export default function Admin() {
         setError()
         setLoading(true)
         try {
-            const res = await validateListing(listingId)
+            const res = await verifyListing(provider.signer, listingId)
             setVerifyResult(res)
         } catch (e) {
             setError(e.message)
@@ -43,7 +45,7 @@ export default function Admin() {
     return <div>
         <h1>Admin</h1>
 
-        <p>The function contains admin actions for the {APP_NAME} application.</p>
+        <p>The function contains admin actions for the {APP_NAME} application. Note this may require several confirmations, see setupTables for details.</p>
 
         {error && <div className="error-text">
             {error}
@@ -60,7 +62,7 @@ export default function Admin() {
             setLoading(true)
             setError()
             try {
-                const res = await setupTables()
+                const res = await setupTables(provider.signer)
                 setTableResult(res)
             } catch (e) {
                 console.error('error creating tables', e)
@@ -100,22 +102,6 @@ export default function Admin() {
         </div>}
 
         <Divider />
-
-        {LISTING_TABLE && <div>
-
-
-            <h3>Grant access</h3>
-
-            <p>Grant access to a user to create listings.</p>
-
-            <Button type="primary" disabled={loading} loading={loading} onClick={grant} className="standard-btn">Grant access</Button>
-        </div>
-        }
-
-
-
-
-
 
     </div>
 

@@ -75,6 +75,8 @@ NextJS: We utilized NextJS to create a responsive and interactive frontend inter
 
 <!-- Saturn: Data validation (using browser client). https://github.com/filecoin-saturn/browser-client -->
 
+<p>Note this project is a hackathon prototype and would require additional work to be mainnet ready</p>
+
 
 ## Running the project (from scratch)
 

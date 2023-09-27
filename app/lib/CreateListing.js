@@ -113,7 +113,7 @@ function CreateListing() {
 
       try {
         // const price  = ethers.utils.parseEther(listing.price).toString()
-        const listingResult = createListing(listing)
+        const listingResult = createListing(provider.signer, listing)
       } catch (e) {
         console.error('error creating db listing', e)
         // res['dbError'] = JSON.stringify(e.message || e.response?.message || e)

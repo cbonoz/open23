@@ -1,6 +1,22 @@
 import { ethers } from "ethers";
 import { DATA_CONTRACT} from "./metadata";
+import { POLICY_CONTRACT } from "./policy";
 import { ADMIN_ADDRESS } from "../constants";
+
+export async function deployPolicy(signer) {
+    // Deploy contract with ethers
+    const factory = new ethers.ContractFactory(
+        POLICY_CONTRACT.abi,
+        POLICY_CONTRACT.bytecode,
+        signer
+    );
+    const contract = await factory.deploy(); // must match contract.
+    // log
+    console.log("Deploying policy contract...");
+    await contract.deployed();
+    console.log("deployed policy contract...", contract.address);
+    return contract;
+}
 
 export async function deployContract(signer, cid, price) {
     // Deploy contract with ethers
@@ -30,4 +46,14 @@ export async function purchaseContract(signer, contractAddress, price) {
     console.log("Purchased contract...", tx);
     const result = await contract.purchaseAccess.call();
     return {cid: result};
+}
+
+export const getMetadata = async (signer, address) => {
+    const contract = new ethers.Contract(
+        address,
+        DATA_CONTRACT.abi,
+        signer
+    );
+    const result = await contract.getMetadata.call();
+    return result;
 }

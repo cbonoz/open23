@@ -22,7 +22,7 @@ export default function ListingCard({ listing }) {
             <div key="purchases">Purchases: {listing.purchases}</div>,
             <div key="last sale">List Price: {listing.price}</div>,
         ]}
-        cover={<Image alt={listing.name} width={200} height={200} src={listing.image} />}>
+        cover={<Image alt={listing.name} width={260} height={200} src={listing.image} />}>
         <Card.Meta title={listing.name} description={desc}/>
     </Card>
 

@@ -4,13 +4,11 @@ import { useContext, useEffect, useState } from 'react'
 import Search from 'antd/es/input/Search'
 import ListingCard from '../lib/ListingCard'
 import { EXAMPLE_ITEM, generateItem } from '../constants'
-import { Pagination, Spin } from 'antd'
+import { Divider, Pagination, Spin } from 'antd'
 import { getListings } from '../util/tableland'
 import { formatListing, isEmpty } from '../util'
 
-
 import Fuse from "fuse.js";
-import { DATASET_ITEMS, EXAMPLE_DATASETS } from '../constants'
 
 
 export default function Home() {
@@ -77,11 +75,13 @@ export default function Home() {
           return <ListingCard listing={listing} key={i} />
         })}
       </div>}
+      <Divider/>
       <div className='centered'>
         {!loading && isEmpty(data) && <div>
           No listings found
         </div>}
-        {data.length > 0 && <div><p className='bold'>Found listings: {data.length}</p></div>}
+        {data.length > 0 && <div>
+          <p className='bold'>Found listings: {data.length}</p></div>}
         <br />
         <Pagination
           current={page}

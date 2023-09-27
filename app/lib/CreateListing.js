@@ -313,7 +313,7 @@ function CreateListing() {
                   <br />
                   <a href={result.listingUrl} target="_blank">
                     View listing page 
-                  </a> (takes at least {ACTIVE_CHAIN.blockTimeSeconds} seconds to confirm)
+                  </a> (the listing may take a few minutes to become available on the network).
                 </p>
               </div>
             </div>

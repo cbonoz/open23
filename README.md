@@ -66,9 +66,12 @@ Uploaded Datasets all have a validation flag on them. By default all datasets ar
 ## Technologies used
 
 
-Filecoin FVM: The Filecoin File Verification Marketplace (FVM) integration ensures the security and immutability of listed data. This technology guarantees that data remains tamper-proof and accessible only to authorized users.
+Filecoin FVM: The Filecoin File Verification Marketplace (FVM) integration ensures the security and immutability of listed data. This technology guarantees that data remains tamper-proof and accessible only to authorized users. Filecoin smart contracts are used for access control and auditing of offers. Every DataX listing gets its own unique contract.
 
-Tableland: Tableland is employed to manage the complex data relationships within the marketplace, enabling efficient search and discovery of relevant data sets.
+Example contract here: https://calibration.filscan.io/address/0x6886489D4c3e3C89b70a56DC8e8984eccF520728/
+
+
+Tableland: Tableland is employed to manage the complex data relationships within the marketplace, enabling efficient search and discovery of relevant data sets. 
 
 web3.storage: To address the challenge of decentralized storage, we integrated web3.storage, which utilizes blockchain technology to securely store and retrieve data files.
 
@@ -77,6 +80,13 @@ Filecoin Saturn: Saturn secures each data set client side with .car files delive
 DataverseOS: Authentication and user state management plugging into existing wallets and providers the customer may already use (i.e. metamask).
 
 NextJS: We utilized NextJS to create a responsive and interactive frontend interface that offers a seamless browsing experience for users. Deployed on surge.
+
+<!-- Filecoin (8): Compatiable with many of the existing EVM toolkits like ethers made it easy to get up and running. Actors/deals have some learning curve.
+Tableland (7): Bit harder to debug and somewhat subject to the block settlement times with tables. Some missing functionality with the react sdk but the discord was helpful
+web3.storage (9): Have used this for several projects and works consistently and is a great bridge to using distributed storage.
+Filecoin Saturn (7): Value prop of downloading as .car for an average user might not be super obvious. Asked a question in the discord on how to get the service worker running and got it resolved easily (browser verification).
+Dataverse (7): Some overlap with tableland functionality, but used this as a wrapper for core authentication. Had some small issues with nextjs and server side rendering but was able to resolve. Wasn't able to easily select a second wallet address within a wallet (seemed like it was selecting the first one by default). Worked otherwise though!
+ -->
 
 
 <!-- Saturn: Data validation (using browser client). https://github.com/filecoin-saturn/browser-client -->

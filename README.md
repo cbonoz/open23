@@ -7,13 +7,14 @@
 DataX | A bid/ask marketplace for curated datasets.
 ---
 
-DataX is a bid/ask marketplace for data similar to StockX where users can list data their unique and custom datasets for sale with the ability for public search and potential buyers to set their asking price. 
+DataX is a bid/ask marketplace concept for data similar to StockX where users can list data their unique and custom datasets for sale with the ability for public search and potential buyers to set their asking price. 
 
-Built using NextJS, Filecoin FVM, Tableland, Dataverse, Saturn, and web3.storage.
+Built using NextJS, Filecoin FVM, Tableland, Dataverse, Saturn, and web3.storage for the Encode Open Data hackathon 2023.
+
 
 Live Demo: https://data-x.surge.sh/search (calibration)
 
-Demo video: 
+Demo video: https://youtu.be/QQEwZOEAQjI
 
 
 ## Inspiration
@@ -112,6 +113,9 @@ This command deploys the build site to surge.sh by default, feel free to edit to
 ## Accomplishments that we're proud of
 
 ## What we learned -->
+
+### Screenshots
+![Alt text](<img/Screenshot 2023-09-26 at 9.58.12 PM.png>) ![Alt text](<img/Screenshot 2023-09-26 at 9.56.06 PM.png>) ![Alt text](<img/Screenshot 2023-09-26 at 9.56.15 PM.png>) ![Alt text](<img/Screenshot 2023-09-26 at 9.56.31 PM.png>) ![Alt text](<img/Screenshot 2023-09-26 at 9.56.37 PM.png>) ![Alt text](<img/Screenshot 2023-09-26 at 9.57.44 PM.png>) ![Alt text](<img/Screenshot 2023-09-26 at 9.57.51 PM.png>) ![Alt text](<img/Screenshot 2023-09-26 at 9.57.56 PM.png>)
 
 ## Potential future work
 * Implement advanced data analytics tools to provide insights and trends on data usage, helping both sellers and buyers make informed decisions.

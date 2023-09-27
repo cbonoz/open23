@@ -28,6 +28,7 @@ export default function Home() {
       keys: ['name', 'description']
     })
     const res = fuse.search(searchValue)
+    console.log('fuse search', searchValue, res)
     setFilteredData(res.map(r => r.item))
   }, [searchValue, data])
 
@@ -37,12 +38,7 @@ export default function Home() {
       const res = await getListings(0, 100)
       const formatted = res.map(formatListing)
       console.log('get listings', formatted)
-      // if (isEmpty(res)) {
-      //   setData(ITEMS)
-      // } else {
       setData(formatted)
-      // }
-      // setListings(res)
     } catch (e) {
       console.error('error getting listings', e)
     } finally {
@@ -54,7 +50,7 @@ export default function Home() {
     get()
   }, [page, pageSize])
 
-  const filteredItems = searchValue ? filteredData : data;
+  const filteredItems = isEmpty(searchValue) ? data : filteredData;
 
   return (
     <div className='container'>
@@ -71,17 +67,18 @@ export default function Home() {
         <Spin size='large' />
       </div>}
       {!loading && <div className="listing-section">
-        {data.map((listing, i) => {
+        {filteredItems.map((listing, i) => {
           return <ListingCard listing={listing} key={i} />
         })}
       </div>}
       <Divider/>
       <div className='centered'>
-        {!loading && isEmpty(data) && <div>
+        {!loading && isEmpty(filteredItems) && <div>
           No listings found
         </div>}
-        {data.length > 0 && <div>
-          <p className='bold'>Found listings: {data.length}</p></div>}
+        {filteredItems.length > 0 && <div>
+          {searchValue && <p className='bold'>Search results for: {searchValue}</p>}
+          <p className='bold'>Found listings: {filteredItems.length}</p></div>}
         <br />
         <Pagination
           current={page}

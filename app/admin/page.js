@@ -15,18 +15,6 @@ export default function Admin() {
     const [listingId, setListingId] = useState()
     const { provider } = useWallet()
 
-    async function grant() {
-        setError()
-        setLoading(true)
-        try {
-            const res = await grantAccess([OFFER_TABLE, LISTING_TABLE])
-            console.log('grant', res)
-        } catch (e) {
-            setError(e.message)
-        }
-        setLoading(false)
-    }
-
     async function validateListing() {
         if (!listingId) {
             return
@@ -37,7 +25,8 @@ export default function Admin() {
             const res = await verifyListing(provider.signer, listingId)
             setVerifyResult(res)
         } catch (e) {
-            setError(e.message)
+            console.error('verifying listing', e)
+            // setError(e.message)
         }
         setLoading(false)
     }

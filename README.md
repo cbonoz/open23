@@ -12,9 +12,11 @@ DataX is a bid/ask marketplace concept for data similar to StockX where users ca
 Built using NextJS, Filecoin FVM, Tableland, Dataverse, Saturn, and web3.storage for the Encode Open Data hackathon 2023.
 
 
-Live Demo: https://data-x.surge.sh d(calibration)
+Live Demo: https://data-x.surge.sh (calibration)
 
 Demo video: https://youtu.be/QQEwZOEAQjI
+
+Note that networks with faster block times will give better UX and settlement for table/backend mutations (ex: indexing listings for search, recording purchases/offers). Calibration has a 30s block time - this has been edited for the demo.
 
 
 ## Inspiration

@@ -298,9 +298,9 @@ function CreateListing() {
               <Result status="success"
                 title="Listing created! Confirm last transaction to index the result" subTitle="Access your data page and content below. It may take a few minutes to confirm the listing on the network." />
               <div>
-                <a href={ipfsUrl(result.cid)} target="_blank">
+                <Button href={ipfsUrl(result.cid)} target="_blank">
                   Download files
-                </a>
+                </Button>
                  {/* (download secure <a href="https://spec.filecoin.io/systems/filecoin_files/piece/#:~:text=In%20order%20to%20make%20a,un%2DCAR'ed%20constructions." target="_blank">.car</a> format) */}
                 <br />
                 <a href={result.contractUrl} target="_blank">

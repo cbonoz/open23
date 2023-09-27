@@ -45,6 +45,10 @@ a {
   margin-bottom: 20px;
 }
 
+.small-font {
+  font-size: 14px;
+}
+
 .listing-card {
   margin: 5px;
   display: inline-block;

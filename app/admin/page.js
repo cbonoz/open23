@@ -42,10 +42,12 @@ export default function Admin() {
         setLoading(false)
     }
 
+    const hasTables = OFFER_TABLE && LISTING_TABLE;
+
     return <div>
         <h1>Admin</h1>
 
-        <p>The function contains admin actions for the {APP_NAME} application. Note this may require several confirmations, see setupTables for details.</p>
+        <p>The function contains admin actions for the {APP_NAME} application. </p>
 
         {error && <div className="error-text">
             {error}
@@ -53,9 +55,11 @@ export default function Admin() {
 
         <Divider />
 
-        <h3>Create app tables</h3>
+        <h3>Manage {APP_NAME} app tables</h3>
 
-        <p>This command creates the production tables used for storing listings and offers in the {APP_NAME} application.
+        <p>This command creates the production tables used for storing listings and offers in the {APP_NAME} application. Note this may require several confirmations, see setupTables for details. Steps:<br/><br/>
+        1) If no tables in `.env`, create listing and offer tables on Tableland then apply public access grants to each.<br/>
+        2) If tables in `.env`, apply grants to existing tables.
         </p>
 
         <Button className="standard-btn" type="primary" disabled={loading} loading={loading} onClick={async () => {
@@ -70,7 +74,7 @@ export default function Admin() {
             } finally {
                 setLoading(false)
             }
-        }}>Create app tables</Button>
+        }}>{!hasTables? 'Create' : 'Add grants to'} app tables</Button>
 
 
         {tableResult && <div>

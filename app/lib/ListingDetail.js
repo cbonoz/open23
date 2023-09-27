@@ -18,6 +18,7 @@ import Image from 'next/image'
 import { abbreviate, convertCamelToHuman, formatCurrency, formatListing, getExplorerUrl, humanError, ipfsUrl, isEmpty } from '../util';
 import { ACTIVE_CHAIN, APP_NAME, EXAMPLE_OFFERS, STAT_KEYS } from '../constants';
 import { LineChart, PieChart, BarChart } from 'react-chartkick'
+import { CheckCircleOutlined, CloseCircleOutlined } from '@ant-design/icons';
 
 import { getMetadata, purchaseContract } from '../util/listingContract';
 import { addPurchase, createOffer, getListing, getOffersForListing } from '../util/tableland';
@@ -230,11 +231,14 @@ const ListingDetail = ({ listingId }) => {
                                 })}
                                 {
                                     listing.verified && <p className='success-text'>
-                                        <h3>Verified by {APP_NAME}</h3>
+                                        <h3>
+                                            <CheckCircleOutlined />&nbsp;
+                                            Listing marked verified by {APP_NAME}</h3>
                                     </p>
                                 }
                                 {
                                     !listing.verified && <p className='error-text'>
+<CloseCircleOutlined />&nbs;
                                         Listing not yet verified, purchase at your own risk.
                                     </p>
                                 }

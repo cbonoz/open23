@@ -34,6 +34,7 @@ Existing data marketplaces have shown significant shortcomings that hinder their
  We wanted to create a platform that empowers data owners to monetize their data assets while allowing data consumers to access valuable information in a transparent and decentralized manner. Sellers of the data can name their price to reveal a dataset and potential purchaser can either immediately buy it or make an offer. The seller can later change their price to match previous offers.
 
 
+
 ## What it does
 
 DataX provides a user-friendly interface for listing various types of data sets. Data owners can upload their data, set a minimum asking price, and choose whether to list their data as an auction or for direct purchase. On the other side, data consumers can search for specific data sets, place bids in auctions, or directly purchase data at the listed prices.
@@ -75,7 +76,7 @@ NextJS: We utilized NextJS to create a responsive and interactive frontend inter
 
 <!-- Saturn: Data validation (using browser client). https://github.com/filecoin-saturn/browser-client -->
 
-<p>Note this project is a hackathon prototype and would require additional work to be mainnet ready</p>
+ <p>Note this project is a hackathon prototype and would require additional work to be mainnet/production ready.</p>
 
 
 ## Running the project (from scratch)

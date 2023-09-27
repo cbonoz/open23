@@ -10,7 +10,7 @@ export default function ListingCard({ listing }) {
 
     const desc = <span>
         {listing.description.substring(0, 100)}...<br/>
-        <b>Uploaded: {listing.created_at}</b>
+        <div className="bold small-font">Uploaded: {listing.created_at}</div>
     </span>
     return <Card
         className="listing-card"

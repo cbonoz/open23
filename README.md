@@ -11,6 +11,10 @@ DataX is a bid/ask marketplace for data similar to StockX where users can list d
 
 Built using NextJS, Filecoin FVM, Tableland, Dataverse, Saturn, and web3.storage.
 
+Live Demo: https://data-x.surge.sh/search (calibration)
+
+Demo video: 
+
 
 ## Inspiration
 

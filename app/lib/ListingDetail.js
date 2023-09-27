@@ -206,14 +206,6 @@ const ListingDetail = ({ listingId }) => {
                             <br />
                         </section>
                         <section className="product-details">
-                            {/* <Statistic
-                                style={{ display: 'inline-block', marginRight: 32 }}
-                                title={"Created by"}
-                                valueRender={() => <a href={getExplorerUrl(createdAddress)} target="_blank">
-                                    {abbreviate(createdAddress)}
-                                </a>
-                                }
-                            /> */}
                             <Card title="Details">
                                 {Object.keys(formattedListing).map((key, i) => {
                                     if (key === 'image' || key === 'description' || key === 'name' || isEmpty(key)) {
@@ -229,18 +221,14 @@ const ListingDetail = ({ listingId }) => {
                                     </span>
                                     )
                                 })}
-                                {
-                                    listing.verified && <p className='success-text'>
-                                        <h3>
-                                            <CheckCircleOutlined />&nbsp;
-                                            Listing marked verified by {APP_NAME}</h3>
-                                    </p>
+                                {!!listing.verified && <p className='success-text'>
+                                    <h3>
+                                        <CheckCircleOutlined />&nbsp;Listing marked verified by {APP_NAME}</h3>
+                                </p>
                                 }
-                                {
-                                    !listing.verified && <p className='error-text'>
-<CloseCircleOutlined />&nbs;
-                                        Listing not yet verified, purchase at your own risk.
-                                    </p>
+                                {!listing.verified && <p className='error-text'>
+                                    <CloseCircleOutlined />&nbsp;Listing not yet verified, purchase at your own risk.
+                                </p>
                                 }
                             </Card>
                         </section>
@@ -290,11 +278,18 @@ const ListingDetail = ({ listingId }) => {
                 <Divider />
                 <Row>
                     <Col span={24}>
-                        <h3>Recent Offers</h3>
+                        <h3>Offer trend</h3>
                         {/* https://chartkick.com/react */}
 
                         {/* Chart */}
-                        <LineChart data={offerData} xtitle="Time" ytitle={ACTIVE_CHAIN.symbol} />
+                        <LineChart data={offerData} xtitle="Date" ytitle={`Amount (${ACTIVE_CHAIN.symbol}`}
+
+                            download={true} />
+
+
+                        <a href="#" onClick={() => {
+                            setOfferData(EXAMPLE_OFFERS)
+                        }}>Show example offers</a>
 
 
                     </Col>

@@ -125,14 +125,14 @@ This command deploys the build site to surge.sh by default, feel free to edit to
 ## Accomplishments that we're proud of
 
 ## What we learned -->
+### Hosted saturn service worker
+<img src='./img/sw.png' width=300 />
 
 
 ### Screenshots
 ![Alt text](<img/Screenshot 2023-09-26 at 9.58.12 PM.png>) ![Alt text](<img/Screenshot 2023-09-26 at 9.56.06 PM.png>) ![Alt text](<img/Screenshot 2023-09-26 at 9.56.15 PM.png>) ![Alt text](<img/Screenshot 2023-09-26 at 9.56.31 PM.png>) ![Alt text](<img/Screenshot 2023-09-26 at 9.56.37 PM.png>) ![Alt text](<img/Screenshot 2023-09-26 at 9.57.44 PM.png>) ![Alt text](<img/Screenshot 2023-09-26 at 9.57.51 PM.png>) ![Alt text](<img/Screenshot 2023-09-26 at 9.57.56 PM.png>) ![Alt text](<img/Screenshot 2023-09-26 at 10.02.57 PM.png>)
 
 
-### Saturn service worker
-<img src='./img/sw.png' width=600 />
 
 
 ## Potential future work

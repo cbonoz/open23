@@ -16,7 +16,7 @@ Live Demo: https://data-x.surge.sh (calibration)
 
 Demo video: https://youtu.be/QQEwZOEAQjI
 
-Note that networks with faster block times will give better UX and settlement for table/backend mutations (ex: indexing listings for search, recording purchases/offers). Calibration has a 30s block time - this has been edited for the demo.
+Note that networks with faster block times will give better UX and settlement for table/backend mutations (ex: indexing listings for search, recording purchases/offers). Calibration has a 30s block time - this has been edited for the demo video.
 
 
 ## Inspiration
@@ -126,8 +126,14 @@ This command deploys the build site to surge.sh by default, feel free to edit to
 
 ## What we learned -->
 
+
 ### Screenshots
 ![Alt text](<img/Screenshot 2023-09-26 at 9.58.12 PM.png>) ![Alt text](<img/Screenshot 2023-09-26 at 9.56.06 PM.png>) ![Alt text](<img/Screenshot 2023-09-26 at 9.56.15 PM.png>) ![Alt text](<img/Screenshot 2023-09-26 at 9.56.31 PM.png>) ![Alt text](<img/Screenshot 2023-09-26 at 9.56.37 PM.png>) ![Alt text](<img/Screenshot 2023-09-26 at 9.57.44 PM.png>) ![Alt text](<img/Screenshot 2023-09-26 at 9.57.51 PM.png>) ![Alt text](<img/Screenshot 2023-09-26 at 9.57.56 PM.png>) ![Alt text](<img/Screenshot 2023-09-26 at 10.02.57 PM.png>)
+
+
+### Saturn service worker
+<img src='./img/sw.png' width=600 />
+
 
 ## Potential future work
 * Implement advanced data analytics tools to provide insights and trends on data usage, helping both sellers and buyers make informed decisions.

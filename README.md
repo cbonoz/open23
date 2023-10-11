@@ -16,6 +16,8 @@ Live Demo: https://data-x.surge.sh (calibration)
 
 Demo video: https://youtu.be/QQEwZOEAQjI
 
+Pitch slides: https://docs.google.com/presentation/d/1h30Fic6S2ALmAOz_mFOzgp0uBYAjAMlzdhefXmbDgOo/edit#slide=id.g28a8e7e850a_0_140
+
 Note that networks with faster block times will give better UX and settlement for table/backend mutations (ex: indexing listings for search, recording purchases/offers). Calibration has a 30s block time - this has been edited for the demo video.
 
 
